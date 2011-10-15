@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+PortGroup ocaml     1.0
+name                caml-fileutils
+version             0.4.0
+categories          devel ml
+maintainers         googlemail.com:benedikt.meurer
+license             LGPL-2.1
+description         File manipulation library for OCaml
+long_description    ocaml-fileutils is a file manipulation library for OCaml. \
+                    It is intended to provide a basic interface to the most \
+                    common real file and filename operations, similar in style \
+                    to what the GNU fileutils provide.
+
+homepage            http://le-gall.net/sylvain+violaine/ocaml-fileutils.html
+platforms           darwin
+master_sites        http://le-gall.net/sylvain+violaine/download/
+
+distname            ocaml-fileutils-${version}
+
+checksums           md5     93437c0fe6fa0e02c30e87af6a0d4e14 \
+                    sha1    f298dd1c31374552b3d07536a9040380bb019d27 \
+                    rmd160  444e496576262ec825a5cde906a482446a0bc7ac
+
+depends_lib         port:ocaml port:caml-findlib
+
+# ocaml is not universal
+universal_variant   no
+
+use_parallel_build  no
+patchfiles          patch-Makefile.diff
+
+set ocamlfind_destdir ${destroot}${prefix}/lib/ocaml/site-lib
+
+destroot.env        OCAMLFIND_INSTFLAGS="-destdir $ocamlfind_destdir -ldconf ignore"
+destroot.target     install
+
+pre-destroot {
+    file mkdir $ocamlfind_destdir
+}

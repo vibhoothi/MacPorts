@@ -1,0 +1,17 @@
+--- Makefile.orig	2011-10-15 17:36:23.000000000 +0200
++++ Makefile	2011-10-15 17:51:48.000000000 +0200
+@@ -52,10 +52,10 @@
+ 	-$(RM) "TopMakefile"
+ 
+ install: all
+-	$(INSTALL) -d $(htmldir)/api
+-	$(INSTALL_DATA) -t $(htmldir)/api \
+-	  $(wildcard $(BUILDDIR)/fileutils.docdir/*)
+-	$(OCAMLFIND) install \
++	$(INSTALL) -d $(DESTDIR)${datarootdir}/doc/caml-fileutils
++	$(INSTALL_DATA) $(wildcard $(BUILDDIR)/fileutils.docdir/*) \
++	  $(DESTDIR)${datarootdir}/doc/caml-fileutils
++	$(OCAMLFIND) install $(OCAMLFIND_INSTFLAGS) \
+ 	  -patch-version $(PACKAGE_VERSION) \
+ 	  fileutils \
+ 	  "$(SRCDIR)/META" \
