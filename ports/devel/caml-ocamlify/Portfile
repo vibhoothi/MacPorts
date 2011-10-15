@@ -8,7 +8,7 @@ version             0.0.1
 categories          devel ml
 maintainers         googlemail.com:benedikt.meurer
 license             LGPL-2.1
-description         Include files in OCaml code.
+description         Include files in OCaml code
 long_description    This program allows to copy files inside OCaml code. It \
                     uses a first file that describes the other files that must \
                     be included and the type of OCaml variable it should create. \
