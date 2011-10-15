@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+PortGroup ocaml     1.0
+name                caml-ocamlify
+version             0.0.1
+categories          devel ml
+maintainers         googlemail.com:benedikt.meurer
+license             LGPL-2.1
+description         Include files in OCaml code.
+long_description    This program allows to copy files inside OCaml code. It \
+                    uses a first file that describes the other files that must \
+                    be included and the type of OCaml variable it should create. \
+                    It can also describe dependencies to other files, in order \
+                    to generate .depends files for make.
+
+homepage            http://ocamlify.forge.ocamlcore.org/
+platforms           darwin
+master_sites        http://forge.ocamlcore.org/frs/download.php/379/
+
+distname            ocamlify-${version}
+
+checksums           md5     bcd97ad0f7203019019997197451dbf0 \
+                    sha1    edac27eb484f151076d645a8b8b6d502e5f72376 \
+                    rmd160  0a796a55491749b0677a5f956a6ed261b6bac408
+
+livecheck.type      regex
+livecheck.url       http://forge.ocamlcore.org/frs/?group_id=53
+livecheck.regex     {>ocamlify-(.*)\.tar\.gz}
+
+use_oasis           yes
+
+configure.args-append "--override exec_prefix ${destroot}${prefix}"
+
