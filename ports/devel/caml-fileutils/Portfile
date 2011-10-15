@@ -24,8 +24,6 @@ checksums           md5     b2a3c8541a130d7c601a7deb5e982ef7 \
                     sha1    a2a7326565f8cf5d8cc11264b9612329579a9d46 \
                     rmd160  181e7c8ea72fb4438809705584a2ee7e132367e6
 
-depends_lib         port:ocaml port:caml-findlib
-
 livecheck.type      regex
 livecheck.url       http://forge.ocamlcore.org/frs/?group_id=128
 livecheck.regex     {>ocaml-fileutils-(.*)\.tar\.gz}
