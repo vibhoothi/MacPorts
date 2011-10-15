@@ -31,5 +31,5 @@ livecheck.regex     {>ocamlify-(.*)\.tar\.gz}
 
 use_oasis           yes
 
-configure.args-append "--override exec_prefix ${destroot}${prefix}"
+configure.args-append "--destdir ${destroot}"
 
