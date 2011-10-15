@@ -4,7 +4,7 @@
 PortSystem          1.0
 PortGroup ocaml     1.0
 name                caml-fileutils
-version             0.4.0
+version             0.4.3
 categories          devel ml
 maintainers         googlemail.com:benedikt.meurer
 license             LGPL-2.1
@@ -14,29 +14,24 @@ long_description    ocaml-fileutils is a file manipulation library for OCaml. \
                     common real file and filename operations, similar in style \
                     to what the GNU fileutils provide.
 
-homepage            http://le-gall.net/sylvain+violaine/ocaml-fileutils.html
+homepage            http://forge.ocamlcore.org/projects/ocaml-fileutils/
 platforms           darwin
-master_sites        http://le-gall.net/sylvain+violaine/download/
+master_sites        http://forge.ocamlcore.org/frs/download.php/625/
 
 distname            ocaml-fileutils-${version}
 
-checksums           md5     93437c0fe6fa0e02c30e87af6a0d4e14 \
-                    sha1    f298dd1c31374552b3d07536a9040380bb019d27 \
-                    rmd160  444e496576262ec825a5cde906a482446a0bc7ac
+checksums           md5     b2a3c8541a130d7c601a7deb5e982ef7 \
+                    sha1    a2a7326565f8cf5d8cc11264b9612329579a9d46 \
+                    rmd160  181e7c8ea72fb4438809705584a2ee7e132367e6
 
 depends_lib         port:ocaml port:caml-findlib
 
-# ocaml is not universal
-universal_variant   no
+livecheck.type      regex
+livecheck.url       http://forge.ocamlcore.org/frs/?group_id=128
+livecheck.regex     {>ocaml-fileutils-(.*)\.tar\.gz}
 
-use_parallel_build  no
-patchfiles          patch-Makefile.diff
+use_oasis           yes
+use_oasis_doc       yes
 
-set ocamlfind_destdir ${destroot}${prefix}/lib/ocaml/site-lib
+configure.args-append "--override datarootdir ${destroot}${prefix}/share"
 
-destroot.env        OCAMLFIND_INSTFLAGS="-destdir $ocamlfind_destdir -ldconf ignore"
-destroot.target     install
-
-pre-destroot {
-    file mkdir $ocamlfind_destdir
-}
