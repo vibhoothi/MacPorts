@@ -31,5 +31,5 @@ livecheck.regex     {>ocaml-fileutils-(.*)\.tar\.gz}
 use_oasis           yes
 use_oasis_doc       yes
 
-configure.args-append "--override datarootdir ${destroot}${prefix}/share"
+configure.args-append "--destdir ${destroot} --docdir ${prefix}/share/doc/caml-fileutils"
 
