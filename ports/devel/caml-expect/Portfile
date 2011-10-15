@@ -27,6 +27,7 @@ checksums           md5     723288a1c9078f86e6185e78a6baa577 \
                     rmd160  fb6b6c41cbac7a30b6e6376b93bc31ab65bef2f0
 
 depends_lib         port:caml-extlib \
+                    port:caml-ounit \
                     port:caml-pcre
 
 livecheck.type      regex
