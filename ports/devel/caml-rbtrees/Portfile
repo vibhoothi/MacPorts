@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+PortGroup ocaml     1.0
+name                caml-rbtrees
+version             0.1.0
+categories          devel ml
+maintainers         googlemail.com:benedikt.meurer
+license             MIT
+description         Red-Black Trees for OCaml
+long_description    This is an implementation of Red-Black Trees for OCaml. \
+                    The Red-Black Trees are exposed via a map and a set API, \
+                    which is designed to be compatible with the Map and Set \
+                    modules in the OCaml standard library (which are implemented \
+                    using AVL trees). You can use the Rbmap and Rbset modules as \
+                    drop-in replacement for the Map and Set modules.
+
+homepage            https://github.com/bmeurer/ocaml-rbtrees/
+platforms           darwin
+master_sites        https://github.com/downloads/bmeurer/ocaml-rbtrees/
+
+distname            ocaml-rbtrees-${version}
+
+checksums           md5     5babc634dfa4aa3be6e7599a007a5908 \
+                    sha1    917464237cdeac3eec4c926b8c74aedd03553f52 \
+                    rmd160  1c3e771b2cb723a539a9684d55141d8e7986f6cc
+
+livecheck.type      regex
+livecheck.url       https://github.com/bmeurer/ocaml-rbtrees/downloads
+livecheck.regex     {>ocaml-rbtrees-(.*)\.tar\.gz}
+
+use_oasis           yes
+use_oasis_doc       yes
+
+configure.args-append "--destdir ${destroot} --docdir ${prefix}/share/doc/caml-rbtrees"
+
