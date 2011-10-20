@@ -28,7 +28,7 @@ use_bzip2           yes
 
 depends_lib         port:ncurses
 
-patchfiles          patch-configure-nativedynlink-with-darwin11.diff
+patchfiles          patch-configure-darwin11.diff
 
 use_parallel_build  no
 universal_variant   no
