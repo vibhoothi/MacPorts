@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+PortGroup ocaml     1.0
+name                caml-ocamlnat
+version             0.1.0
+categories          lang ml
+maintainers         googlemail.com:benedikt.meurer
+license             QPL
+description         Native toplevel for the OCaml language
+long_description    The native toplevel permits interactive use of OCaml \
+                    system through a read-eval-print loop, similar to the \
+                    standard OCaml toplevel that ships with OCaml. But while \
+                    the standard OCaml toplevel makes use of the byte code \
+                    compiler and runtime to compile and execute the toplevel \
+                    phrases, ocamlnat uses the optimizing native code compiler \
+                    and its runtime for compilation and code execution, which \
+                    is up to 100 times faster than the byte code runtime.
+
+homepage            http://benediktmeurer.de/ocamlnat
+platforms           darwin
+master_sites        https://forge.ocamlcore.org/frs/download.php/723/
+
+distname            ocamlnat-${version}
+
+checksums           md5     cf1531e673927ce6b5d38dc672191082 \
+                    sha1    06232b6bb1692c65a45d4622f730a1bc1c35bf95 \
+                    rmd160  7258be8e8d6e23eac032a8e5e3290764703a7d86
+
+depends_build       port:caml-ounit
+depends_lib         port:caml-findlib
+
+livecheck.type      regex
+livecheck.url       http://forge.ocamlcore.org/frs/?group_id=277
+livecheck.regex     {>ocamlnat-(.*)\.tar\.bz2}
+
+use_bzip2           yes
+use_oasis           yes
+
+configure.args-append "--destdir ${destroot}"
+
