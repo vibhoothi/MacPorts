@@ -4,7 +4,7 @@
 PortSystem          1.0
 PortGroup ocaml     1.0
 name                caml-ocamlnat
-version             0.1.0
+version             0.1.1
 categories          lang ml
 maintainers         googlemail.com:benedikt.meurer
 license             QPL
@@ -20,13 +20,13 @@ long_description    The native toplevel permits interactive use of OCaml \
 
 homepage            http://benediktmeurer.de/ocamlnat
 platforms           darwin
-master_sites        https://forge.ocamlcore.org/frs/download.php/723/
+master_sites        https://forge.ocamlcore.org/frs/download.php/725/
 
 distname            ocamlnat-${version}
 
-checksums           md5     cf1531e673927ce6b5d38dc672191082 \
-                    sha1    06232b6bb1692c65a45d4622f730a1bc1c35bf95 \
-                    rmd160  7258be8e8d6e23eac032a8e5e3290764703a7d86
+checksums           md5     c8e47d00255131c4d174d6993abde921 \
+                    sha1    bfa76a874491e86c19989c2d82e905275206cbfd \
+                    rmd160  5d50bfc7120fad7b8e83ab2fbdcc33251f0fcbd5
 
 depends_build       port:caml-ounit
 depends_lib         port:caml-findlib
