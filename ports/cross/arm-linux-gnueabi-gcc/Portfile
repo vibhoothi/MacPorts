@@ -93,30 +93,32 @@ configure.compiler  gcc-4.2
 configure.dir       ${workpath}/build
 configure.cmd       ${worksrcpath}/configure
 configure.env       ${environment}
-configure.args      --infodir='${prefix}/share/info' \
+configure.args      --includedir='${prefix}/${crossgcc-target}/include' \
+                    --infodir='${prefix}/share/info' \
                     --mandir='${prefix}/share/man' \
                     --target=${crossgcc-target} \
                     --program-prefix=${crossgcc-target}- \
-                    --with-headers='${prefix}/${crossgcc-target}/include' \
                     --with-libs='${prefix}/${crossgcc-target}/lib' \
-                    --with-gxx-include-dir='${prefix}/${crossgcc-target}/include/c++/${version}/' \
                     --with-system-zlib \
                     --with-gmp='${prefix}' \
                     --with-mpfr='${prefix}' \
                     --with-pkgversion='MacPorts 2011/11/26' \
+                    --with-float=soft \
                     --disable-checking \
-                    --disable-nls \
-                    --enable-shared \
-                    --enable-threads=posix \
-                    --enable-symvers=gnu \
-                    --enable-__cxa_atexit \
+                    --disable-libgomp \
                     --disable-libmudflap \
                     --disable-libssp \
                     --disable-libstdcxx-pch \
-                    --with-cpu= \
+                    --disable-nls \
+                    --enable-__cxa_atexit \
+                    --enable-c99 \
                     --enable-interwork \
                     --enable-languages='c' \
-                    --enable-long-long
+                    --enable-long-long \
+                    --enable-shared \
+                    --enable-symvers=gnu \
+                    --enable-target-optspace \
+                    --enable-threads=posix
 if {${os.platform} == "darwin" && ($build_arch == "x86_64" || $build_arch == "ppc64")} {
     configure.args-append   --build=${build_arch}-apple-darwin${os.version} \
                             --host=${build_arch}-apple-darwin${os.version}
@@ -131,61 +133,14 @@ pre-destroot {
 }
 
 post-destroot {
-	namespace eval crossgcc {}
-
-	# Rename a man page if it exists.
-	#
-	# section: section of the man page (e.g. 1)
-	# manpage: name of the man page (e.g. cpp)
-	proc crossgcc::rename_man_page { section manpage } {
-		global crossgcc-target destroot prefix
-
-		set manpage_path "${destroot}${prefix}/share/man/man${section}/${manpage}.${section}"
-		if { [ file exists ${manpage_path} ] } {
-			file rename ${manpage_path} \
-				"${destroot}${prefix}/share/man/man${section}/${crossgcc-target}-${manpage}.${section}"
-		}
-	}
-
-	# Stuff I don't want (either because they're in the system
-	# or because they would conflict with other FSF ports)
-	# (it's easier for maintainability purposes to fix things here)
-
-	# aliases for locales (should be on the system)
-	file delete "${destroot}${prefix}/share/locale/locale.alias"
-	
 	# FSF propaganda (should already be there or would conflict)
 	file delete -force "${destroot}${prefix}/share/info"
 	file delete -force "${destroot}${prefix}/share/man/man7"
 
 	# (host) libiberty
 	foreach f [glob -directory "${destroot}${prefix}/lib" libiberty.a */libiberty.a] {
-        file delete $f
+       file delete $f
     }
-
-	# aliases for charsets (should already be there)
-	file delete "${destroot}${prefix}/lib/charset.alias"
-	
-	# Remove man pages for tools that are not built as part of cross-gcc
-	file delete "${destroot}${prefix}/share/man/man1/rmic.1"
-	file delete "${destroot}${prefix}/share/man/man1/rmiregistry.1"
-	file delete "${destroot}${prefix}/share/man/man1/jv-convert.1"
-	file delete "${destroot}${prefix}/share/man/man1/gij.1"
-	
-	# For some reason, some man pages are not prefixed while they should have been
-	# (to avoid conflicting).
-	crossgcc::rename_man_page 1 cpp
-	crossgcc::rename_man_page 1 gcjh
-	crossgcc::rename_man_page 1 gcov
-	crossgcc::rename_man_page 1 jcf-dump
-	crossgcc::rename_man_page 1 jv-scan
-	
-	# There is a bug in gcc/Makefile::install-driver
-	# For cross compilers, $(GCC_INSTALL_NAME) is equal to
-	# $(target_noncanonical)-gcc-$(version)
-	# and hence the driver isn't installed.
-	xinstall -c "${workpath}/build/gcc/xgcc" \
-		"${destroot}${prefix}/bin/${crossgcc-target}-gcc-${version}"
 }
 
 livecheck.type  regex
