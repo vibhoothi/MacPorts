@@ -31,7 +31,7 @@ depends_lib         bin:${crossgcc-target}-ar:${crossgcc-target}-binutils \
                     bin:${crossgcc-target}-nm:${crossgcc-target}-binutils \
                     bin:${crossgcc-target}-objdump:${crossgcc-target}-binutils \
                     bin:${crossgcc-target}-ranlib:${crossgcc-target}-binutils \
-                    bin:${crossgcc-target}-strp:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-strip:${crossgcc-target}-binutils \
                     port:${crossgcc-target}-eglibc \
                     port:${crossgcc-target}-linux-libc-dev \
                     port:gmp \
