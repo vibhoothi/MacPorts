@@ -1,9 +1,7 @@
-
-
-diff -durN binutils-2.20.1.orig/configure binutils-2.20.1/configure
---- binutils-2.20.1.orig/configure	2010-08-17 19:32:05.000000000 +0200
-+++ binutils-2.20.1/configure	2010-08-17 19:32:07.000000000 +0200
-@@ -3054,7 +3054,7 @@
+diff -durN binutils-2.21.1.orig/configure binutils-2.21.1/configure
+--- binutils-2.21.1.orig/configure	2011-09-12 13:39:06.292251293 +0200
++++ binutils-2.21.1/configure	2011-09-12 13:39:07.135581381 +0200
+@@ -3148,7 +3148,7 @@
    am33_2.0-*-linux*)
      noconfigdirs="$noconfigdirs ${libgcj} target-newlib target-libgloss"
      ;;
@@ -12,7 +10,7 @@ diff -durN binutils-2.20.1.orig/configure binutils-2.20.1/configure
      noconfigdirs="$noconfigdirs ${libgcj} target-newlib target-libgloss"
      ;;
    sh*-*-pe|mips*-*-pe|*arm-wince-pe)
-@@ -3390,7 +3390,7 @@
+@@ -3487,7 +3487,7 @@
    romp-*-*)
      noconfigdirs="$noconfigdirs bfd binutils ld gas opcodes target-libgloss ${libgcj}"
      ;;
@@ -21,10 +19,10 @@ diff -durN binutils-2.20.1.orig/configure binutils-2.20.1/configure
      case "${host}" in
        i[3456789]86-*-vsta) ;; # don't add gprof back in
        i[3456789]86-*-go32*) ;; # don't add gprof back in
-diff -durN binutils-2.20.1.orig/configure.ac binutils-2.20.1/configure.ac
---- binutils-2.20.1.orig/configure.ac	2010-03-03 15:19:08.000000000 +0100
-+++ binutils-2.20.1/configure.ac	2010-08-17 19:32:07.000000000 +0200
-@@ -541,7 +541,7 @@
+diff -durN binutils-2.21.1.orig/configure.ac binutils-2.21.1/configure.ac
+--- binutils-2.21.1.orig/configure.ac	2011-09-12 13:39:06.308917895 +0200
++++ binutils-2.21.1/configure.ac	2011-09-12 13:39:07.145581342 +0200
+@@ -620,7 +620,7 @@
    am33_2.0-*-linux*)
      noconfigdirs="$noconfigdirs ${libgcj} target-newlib target-libgloss"
      ;;
@@ -33,7 +31,7 @@ diff -durN binutils-2.20.1.orig/configure.ac binutils-2.20.1/configure.ac
      noconfigdirs="$noconfigdirs ${libgcj} target-newlib target-libgloss"
      ;;    
    sh*-*-pe|mips*-*-pe|*arm-wince-pe)
-@@ -877,7 +877,7 @@
+@@ -959,7 +959,7 @@
    romp-*-*)
      noconfigdirs="$noconfigdirs bfd binutils ld gas opcodes target-libgloss ${libgcj}"
      ;;
