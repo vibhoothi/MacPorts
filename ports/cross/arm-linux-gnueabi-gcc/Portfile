@@ -67,6 +67,9 @@ patch.pre_args      -p1
 # All cross ports violate the mtree layout
 destroot.violate_mtree  yes
 
+# Download everything to gcc/
+dist_subdir         gcc
+
 # Since we don't build gcc and binutils at the same time, gcc's Makefile will try to transform
 # program names as gcc's name (add -${version} with ${version} being the version of gcc).
 # But it won't work because binutils binaries don't have the ${version} suffix, and even if they
