@@ -1,0 +1,11 @@
+--- gcc-4.4.6/gcc/glimits.h.orig	2011-11-26 19:13:48.000000000 +0100
++++ gcc-4.4.6/gcc/glimits.h	2011-11-26 19:13:49.000000000 +0100
+@@ -7,7 +7,7 @@
+ 
+ /* Maximum length of a multibyte character.  */
+ #ifndef MB_LEN_MAX
+-#define MB_LEN_MAX 1
++#define MB_LEN_MAX 16
+ #endif
+ 
+ /* Minimum and maximum values a `signed char' can hold.  */
