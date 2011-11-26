@@ -36,6 +36,9 @@ patch.pre_args      -p1
 # All cross ports violate the mtree layout
 destroot.violate_mtree  yes
 
+# Download everything to binutils/
+dist_subdir         binutils
+
 # Build in a different directory, as advised in the README file.
 pre-configure {
     file mkdir "${workpath}/build"
