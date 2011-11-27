@@ -46,12 +46,12 @@ pre-configure {
 configure.dir       ${workpath}/build
 configure.cmd       ${worksrcpath}/configure
 configure.args      --infodir='${prefix}/share/info' \
-                    --target=${crossgcc-target} \
-                    --program-prefix=${crossgcc-target}- \
                     --mandir='${prefix}/share/man' \
+                    --program-prefix=${crossgcc-target}- \
+                    --target=${crossgcc-target} \
                     --with-float=soft \
-                    --with-pkgversion='MacPorts 2011/11/26' \
-                    --with-sysroots \
+                    --with-pkgversion='MacPorts 2011/11/27' \
+                    --with-sysroot='${prefix}/${crossgcc-target}/sysroot' \
                     --disable-multilib \
                     --disable-nls \
                     --disable-werror
@@ -60,11 +60,6 @@ if {${os.platform} == "darwin" && ($build_arch == "x86_64" || $build_arch == "pp
                             --host=${build_arch}-apple-darwin${os.version}
 }
 build.dir           ${workpath}/build
-
-# The Makefile runs configure again in subdirectories.
-# It correcty passes along most configure variables (CFLAGS,
-# LDFLAGS, ...), but seems to neglect CPPFLAGS.
-build.env           CPPFLAGS='-I${prefix}/include'
 
 # We don't want the etc module
 post-extract {
