@@ -1,0 +1,73 @@
+# Generated manually for cross compilation
+PREFIX=@prefix@
+BINDIR=$(PREFIX)/@target@/bin
+LIBDIR=$(PREFIX)/@target@/sysroot/usr/lib/ocaml
+STUBLIBDIR=$(LIBDIR)/stublibs
+MANDIR=$(PREFIX)/share/man
+MANEXT=1
+RANLIB=@target@-ranlib
+RANLIBCMD=@target@-ranlib
+SHARPBANGSCRIPTS=true
+BNG_ARCH=generic
+BNG_ASM_LEVEL=0
+PTHREAD_LINK=-cclib -lpthread
+X11_INCLUDES=
+X11_LINK=
+DBM_INCLUDES=
+DBM_LINK=-lgdbm_compat -lgdbm
+TK_DEFS=
+TK_LINK=
+LIBBFD_LINK=-lbfd -ldl -liberty -lz
+BYTECC=@target@-gcc
+BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64 -D_REENTRANT
+BYTECCLINKOPTS= -Wl,-E
+BYTECCLIBS= -lm  -ldl -ltermcap -lpthread
+BYTECCRPATH=-Wl,-rpath,
+EXE=
+SUPPORTS_SHARED_LIBRARIES=true
+SHAREDCCCOMPOPTS=-fPIC
+MKSHAREDLIBRPATH=-Wl,-rpath,
+NATDYNLINKOPTS=-Wl,-E
+SYSLIB=-l$(1)
+#ml let syslib x = "-l"^x;;
+
+### How to build a static library
+MKLIB=@target@-ar rc $(1) $(2); @target@-ranlib $(1)
+#ml let mklib out files opts = Printf.sprintf "@target@-ar rc %s %s %s; @target@-ranlib %s" out opts files out;;
+ARCH=arm
+MODEL=default
+SYSTEM=linux
+NATIVECC=@target@-gcc
+NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64 -D_REENTRANT
+NATIVECCPROFOPTS=-Wall -D_FILE_OFFSET_BITS=64 -D_REENTRANT
+NATIVECCLINKOPTS=
+NATIVECCRPATH=-Wl,-rpath,
+NATIVECCLIBS= -lm  -ldl
+ASM=@target@-as
+ASPP=@target@-gcc -c
+ASPPPROFFLAGS=-DPROFILING
+PROFILING=noprof
+DYNLINKOPTS= -ldl
+OTHERLIBRARIES=unix str num dynlink bigarray systhreads threads
+DEBUGGER=ocamldebugger
+CC_PROFILE=-pg
+SYSTHREAD_SUPPORT=true
+PARTIALLD=@target@-ld -r
+PACKLD=$(PARTIALLD) $(NATIVECCLINKOPTS) -o\ 
+DLLCCCOMPOPTS=
+IFLEXDIR=
+O=o
+A=a
+SO=so
+EXT_OBJ=.o
+EXT_ASM=.s
+EXT_LIB=.a
+EXT_DLL=.so
+EXTRALIBS=
+CCOMPTYPE=cc
+TOOLCHAIN=cc
+NATDYNLINK=false
+CMXS=cmxa
+MKEXE=$(BYTECC)
+MKDLL=@target@-gcc -shared
+MKMAINDLL=@target@-gcc -shared
