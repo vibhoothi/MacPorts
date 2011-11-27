@@ -1,0 +1,80 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+name                arm-linux-gnueabi-runtime
+version             20111127
+categories          cross devel
+maintainers         googlemail.com:benedikt.meurer
+license             LGPL-2+
+description         Debian armel runtime, headers and import libraries.
+long_description    ${description}
+
+# Parameters for this port
+set crossgcc-target arm-linux-gnueabi
+set binutils-version 2.22-1
+set eglibc-version 2.11.2-10
+set linux-version 2.6.32-39
+set zlib-version 1.2.3.4.dfsg-3
+
+homepage            http://www.debian.org/
+platforms           darwin
+supported_archs     noarch
+master_sites        debian:b/binutils/:binutils \
+                    debian:e/eglibc/:eglibc \
+                    debian:l/linux-2.6/:linux \
+                    debian:z/zlib/:zlib
+distfiles           binutils-dev_${binutils-version}_armel.deb:binutils \
+                    libc6-dev_${eglibc-version}_armel.deb:eglibc \
+                    libc6-pic_${eglibc-version}_armel.deb:eglibc \
+                    libc6_${eglibc-version}_armel.deb:eglibc \
+                    linux-libc-dev_${linux-version}_armel.deb:linux \
+                    zlib1g-dev_${zlib-version}_armel.deb:zlib \
+                    zlib1g_${zlib-version}_armel.deb:zlib
+worksrcdir          ${name}-${version}
+checksums           binutils-dev_${binutils-version}_armel.deb \
+                        md5 e82f7ca55d3c4bb3f491f16d76e0d61f \
+                        sha1 75cf847f2b0dbae90f72d7d94fb31f636af4fe08 \
+                        rmd160 9ef3d0ac4e2f2e40b5a0cd0cff7bc3bb3bc41326 \
+                    libc6-dev_${eglibc-version}_armel.deb \
+                        md5 5ddc618d996fe28753cd8cec153dcc65 \
+                        sha1 7a040bea49d2e34599d2326e05e2c67ef8ed7557 \
+                        rmd160 2af012bc72ba079d426d05de4ff47d18ba2afda3 \
+                    libc6-pic_${eglibc-version}_armel.deb \
+                        md5 a183e19270dbba04d9b169cd282f3fa5 \
+                        sha1 aeac70a52fef831ea91b5061de9082f52cb6cf30 \
+                        rmd160 40f2819b53f83b799a9dc003f487017bc404e6c6 \
+                    libc6_${eglibc-version}_armel.deb \
+                        md5 c5fd3c1161dba7978cdadd745b3e98e4 \
+                        sha1 96e09d56d022d8fa64c31bf03e1a204f61bb2a25 \
+                        rmd160 6e6cf474ebacc38e4be3afcca92e9d4f9b4be769 \
+                    linux-libc-dev_${linux-version}_armel.deb \
+                        md5 9fc0ba169bebb3b29e126ea60ea8eef5 \
+                        sha1 e237ef2b4ce52532e904f0e4e0e5e33935b6573d \
+                        rmd160 471de048c66afefb2a87c7dcb3183bf821368495 \
+                    zlib1g-dev_${zlib-version}_armel.deb \
+                        md5 88f411fcaea45350f1347af29aaee497 \
+                        sha1 acb3725ea56df9cf11741255829deece279ed60e \
+                        rmd160 65c261f68a44b27b6bf2c9326f6e41f8ee795bc3 \
+                    zlib1g_${zlib-version}_armel.deb \
+                        md5 bef2867f57394ba5fe902c56089330e9 \
+                        sha1 b1f40b57f2a15368e84ce7107f2a782e886e5447 \
+                        rmd160 e0a05a9a3d4e07c32a12e7de6ccb9c9026aee19e
+
+depends_build       bin:dpkg:dpkg
+
+
+# All cross ports violate the mtree layout
+destroot.violate_mtree  yes
+
+extract.suffix      .deb
+extract.cmd         dpkg
+extract.pre_args    -x
+extract.post_args   ${worksrcpath}
+use_configure       no
+build {}
+destroot {
+    # Install files by copying them
+    xinstall -d "${destroot}${prefix}/${crossgcc-target}"
+    file copy "${worksrcpath}" "${destroot}${prefix}/${crossgcc-target}/sysroot"
+}
