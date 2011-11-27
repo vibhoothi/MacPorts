@@ -1,0 +1,58 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+name                arm-linux-gnueabi-ocaml-runtime
+version             3.12.1
+categories          cross lang
+maintainers         googlemail.com:benedikt.meurer
+license             {LGPL QPL}
+description         Debian armel OCaml runtime files.
+long_description    ${description}
+
+# Parameters for this port
+set crossgcc-target arm-linux-gnueabi
+set ocaml-version ${version}-2
+
+homepage            http://www.debian.org/
+platforms           darwin
+supported_archs     noarch
+master_sites        debian:o/ocaml/:ocaml
+distfiles           ocaml-base-nox_${ocaml-version}_armel.deb:ocaml \
+                    ocaml-nox_${ocaml-version}_armel.deb:ocaml
+worksrcdir          ${name}-${version}
+checksums           ocaml-base-nox_${ocaml-version}_armel.deb \
+                        md5 d0b286f506cf2df08dce2bd3d425de1e \
+                        sha1 30ec10b1d54bbefbbc56b979ce567f18c3880389 \
+                        rmd160 9bcabfc1e33412764ab2cd8f3c274160ed0aa5b9 \
+                    ocaml-nox_${ocaml-version}_armel.deb \
+                        md5 5b482feadac119ec826674d1cef58395 \
+                        sha1 b43eae0c6c43b6e19835c0d730aeb87f31716dbc \
+                        rmd160 6875455bfc7913e15b33901bd940bdd5748571da
+
+depends_extract     bin:dpkg:dpkg
+depends_run         port:${crossgcc-target}-runtime
+
+
+# All cross ports violate the mtree layout
+destroot.violate_mtree  yes
+
+extract.suffix      .deb
+extract.cmd         dpkg
+extract.pre_args    -x
+extract.post_args   ${worksrcpath}
+use_configure       no
+build {
+    # Fix absolute symbolic links
+    foreach f [glob -directory "${worksrcpath}" -types l "*" "*/*" "*/*/*" "*/*/*/*"] {
+        set t [file readlink "$f"]
+        if [string equal -length 1 "$t" "/"] {
+            system "ln -fs '${prefix}/${crossgcc-target}/sysroot$t' $f"
+        }
+    }
+}
+destroot {
+    # Install files by copying them
+    xinstall -d "${destroot}${prefix}/${crossgcc-target}"
+    file copy "${worksrcpath}" "${destroot}${prefix}/${crossgcc-target}/sysroot"
+}
