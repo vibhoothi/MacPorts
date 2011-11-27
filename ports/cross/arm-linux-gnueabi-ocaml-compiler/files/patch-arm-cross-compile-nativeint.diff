@@ -1,5 +1,5 @@
 diff --git a/asmcomp/arm/emit.mlp b/asmcomp/arm/emit.mlp
-index cfcb0c9..3fd697e 100644
+index cfcb0c9..6afd935 100644
 --- a/asmcomp/arm/emit.mlp
 +++ b/asmcomp/arm/emit.mlp
 @@ -579,9 +579,9 @@ let emit_item = function
@@ -7,10 +7,10 @@ index cfcb0c9..3fd697e 100644
        `	.short	{emit_int n}\n`
    | Cint32 n ->
 -      `	.word	{emit_nativeint	n}\n`
-+      `	.word	{emit_nativeint	(Nativeint.logand n 0xffffffffn)}\n`
++      `	.word	{emit_nativeint	(Nativeint.of_int32 (Nativeint.to_int32 n))}\n`
    | Cint n ->
 -      `	.word	{emit_nativeint n}\n`
-+      `	.word	{emit_nativeint (Nativeint.logand n 0xffffffffn)}\n`
++      `	.word	{emit_nativeint	(Nativeint.of_int32 (Nativeint.to_int32 n))}\n`
    | Csingle f ->
        emit_float32_directive ".long" f
    | Cdouble f ->
