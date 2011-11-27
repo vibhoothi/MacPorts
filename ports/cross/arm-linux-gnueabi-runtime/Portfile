@@ -4,7 +4,7 @@
 PortSystem          1.0
 name                arm-linux-gnueabi-runtime
 version             20111127
-revision            1
+revision            2
 categories          cross devel
 maintainers         googlemail.com:benedikt.meurer
 license             LGPL-2+
@@ -73,7 +73,15 @@ extract.cmd         dpkg
 extract.pre_args    -x
 extract.post_args   ${worksrcpath}
 use_configure       no
-build {}
+build {
+    # Fix absolute symbolic links
+    foreach f [glob -directory "${worksrcpath}/usr" -types l "lib/*.so"] {
+        set t [file readlink "$f"]
+        if [string equal -length 1 "$t" "/"] {
+            system "ln -fs '../..$t' $f"
+        }
+    }
+}
 destroot {
     # Install files by copying them
     xinstall -d "${destroot}${prefix}/${crossgcc-target}"
