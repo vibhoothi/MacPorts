@@ -1,0 +1,228 @@
+diff --git a/configure b/configure
+index 73c0caa..191e167 100755
+--- a/configure
++++ b/configure
+@@ -486,7 +486,7 @@ printf "Detecting compiler arguments: "
+ ( cd tools/extract_args && make ) >ocargs.log 2>&1
+ if [ "$?" -eq 0 ]; then
+     printf "(extractor built) "
+-    tools/extract_args/extract_args -o src/findlib/ocaml_args.ml ocamlc ocamlcp ocamlmktop ocamlopt ocamldep ocamldoc >>ocargs.log 2>&1
++    tools/extract_args/extract_args -o src/findlib/ocaml_args.ml ocamlc ocamlcp ocamlmklib ocamlmktop ocamlopt ocamldep ocamldoc >>ocargs.log 2>&1
+     # ocamlbrowser does not work!
+     if [ $? -eq 0 ]; then
+ 	echo "ok"
+diff --git a/src/findlib/findlib.ml b/src/findlib/findlib.ml
+index 1ea162b..a432906 100644
+--- a/src/findlib/findlib.ml
++++ b/src/findlib/findlib.ml
+@@ -24,6 +24,7 @@ let conf_ignore_dups_in = ref (None : string option);;
+ let ocamlc_default = "ocamlc";;
+ let ocamlopt_default = "ocamlopt";;
+ let ocamlcp_default = "ocamlcp";;
++let ocamlmklib_default = "ocamlmklib";;
+ let ocamlmktop_default = "ocamlmktop";;
+ let ocamldep_default = "ocamldep";;
+ let ocamlbrowser_default = "ocamlbrowser";;
+@@ -34,6 +35,7 @@ let init_manually
+       ?(ocamlc_command = ocamlc_default)
+       ?(ocamlopt_command = ocamlopt_default)
+       ?(ocamlcp_command = ocamlcp_default)
++      ?(ocamlmklib_command = ocamlmklib_default)
+       ?(ocamlmktop_command = ocamlmktop_default)
+       ?(ocamldep_command = ocamldep_default)
+       ?(ocamlbrowser_command = ocamlbrowser_default)
+@@ -47,6 +49,7 @@ let init_manually
+   conf_command := [ `ocamlc,     ocamlc_command;
+ 		    `ocamlopt,   ocamlopt_command;
+ 		    `ocamlcp,    ocamlcp_command;
++		    `ocamlmklib, ocamlmklib_command;
+ 		    `ocamlmktop, ocamlmktop_command;
+ 		    `ocamldep,   ocamldep_command;
+ 		    `ocamlbrowser, ocamlbrowser_command;
+@@ -131,8 +134,8 @@ let init
+       | None -> []
+       | Some p -> [p] in
+ 
+-  let sys_ocamlc, sys_ocamlopt, sys_ocamlcp, sys_ocamlmktop, sys_ocamldep,
+-      sys_ocamlbrowser, sys_ocamldoc,
++  let sys_ocamlc, sys_ocamlopt, sys_ocamlcp, sys_ocamlmklib,
++      sys_ocamlmktop, sys_ocamldep, sys_ocamlbrowser, sys_ocamldoc,
+       sys_search_path, sys_destdir, sys_metadir, sys_stdlib, sys_ldconf = 
+     (
+       let config_vars =
+@@ -154,6 +157,7 @@ let init
+ 	( (lookup "ocamlc" ocamlc_default),
+ 	  (lookup "ocamlopt" ocamlopt_default),
+ 	  (lookup "ocamlcp" ocamlcp_default),
++	  (lookup "ocamlmklib" ocamlmklib_default),
+ 	  (lookup "ocamlmktop" ocamlmktop_default),
+ 	  (lookup "ocamldep" ocamldep_default),
+ 	  (lookup "ocamlbrowser" ocamlbrowser_default),
+@@ -166,8 +170,9 @@ let init
+ 	)
+       )
+       else
+-	( ocamlc_default, ocamlopt_default, ocamlcp_default, ocamlmktop_default,
+-	  ocamldep_default, ocamlbrowser_default, ocamldoc_default,
++	( ocamlc_default, ocamlopt_default, ocamlcp_default, ocamlmklib_default,
++	  ocamlmktop_default, ocamldep_default, ocamlbrowser_default,
++	  ocamldoc_default,
+ 	  [],
+ 	  "",
+           "none",
+@@ -226,12 +231,13 @@ let init
+ 	  try Some(Sys.getenv "OCAMLFIND_IGNORE_DUPS_IN") 
+ 	  with Not_found -> None in
+ 
+-  let ocamlc, ocamlopt, ocamlcp, ocamlmktop, ocamldep, ocamlbrowser,
+-      ocamldoc,
++  let ocamlc, ocamlopt, ocamlcp, ocamlmklib, ocamlmktop,
++      ocamldep, ocamlbrowser, ocamldoc,
+       search_path, destdir, metadir, stdlib, ldconf =
+     (try List.assoc "ocamlc"     env_commands with Not_found -> sys_ocamlc),
+     (try List.assoc "ocamlopt"   env_commands with Not_found -> sys_ocamlopt),
+     (try List.assoc "ocamlcp"    env_commands with Not_found -> sys_ocamlcp),
++    (try List.assoc "ocamlmklib" env_commands with Not_found -> sys_ocamlmklib),
+     (try List.assoc "ocamlmktop" env_commands with Not_found -> sys_ocamlmktop),
+     (try List.assoc "ocamldep"   env_commands with Not_found -> sys_ocamldep),
+     (try List.assoc "ocamlbrowser" env_commands with Not_found -> sys_ocamlbrowser),
+@@ -247,6 +253,7 @@ let init
+     ~ocamlc_command: ocamlc
+     ~ocamlopt_command: ocamlopt
+     ~ocamlcp_command: ocamlcp
++    ~ocamlmklib_command: ocamlmklib
+     ~ocamlmktop_command: ocamlmktop
+     ~ocamldep_command: ocamldep
+     ~ocamlbrowser_command: ocamlbrowser
+diff --git a/src/findlib/findlib.mli b/src/findlib/findlib.mli
+index e22a39d..1b704af 100644
+--- a/src/findlib/findlib.mli
++++ b/src/findlib/findlib.mli
+@@ -56,13 +56,13 @@ val init :
+    *   The special value ["none"] turns this feature off.
+    * - The search path is the concatenation of the env variable OCAMLPATH
+    *   and the variable [path] of the config file
+-   * - The executables of (ocamlc|ocamlopt|ocamlcp|ocamlmktop) are determined
+-   *   as follows: if the env variable OCAMLFIND_COMMANDS is set and non-empty,
+-   *   its contents specify the executables. Otherwise, if the config file
+-   *   variables [ocamlc], [ocamlopt], [ocamlcp] and [ocamlmktop] are set,
+-   *   their contents specify the executables. Otherwise, the obvious default
+-   *   values are chosen: ["ocamlc"] for [ocamlc], ["ocamlopt"] for [ocamlopt],
+-   *   and so on.
++   * - The executables of (ocamlc|ocamlopt|ocamlcp|ocamlmklib|ocamlmktop) are
++   *   determined as follows: if the env variable OCAMLFIND_COMMANDS is set
++   *   and non-empty, its contents specify the executables. Otherwise, if the
++   *   config file variables [ocamlc], [ocamlopt], [ocamlcp], [ocamlmklib] and
++   *   [ocamlmktop] are set, their contents specify the executables. Otherwise,
++   *   the obvious default values are chosen: ["ocamlc"] for [ocamlc],
++   *   ["ocamlopt"] for [ocamlopt], and so on.
+    * - The directory of the standard library is the value of the environment
+    *   variable CAMLLIB (or OCAMLLIB), or if unset or empty, the value of
+    *   the configuration variable [stdlib], or if unset the built-in location
+@@ -77,6 +77,7 @@ val init_manually :
+       ?ocamlc_command: string ->       (* default: "ocamlc"     *)
+       ?ocamlopt_command: string ->     (* default: "ocamlopt"   *)
+       ?ocamlcp_command: string ->      (* default: "ocamlcp"    *)
++      ?ocamlmklib_command: string ->   (* default: "ocamlmklib" *)
+       ?ocamlmktop_command: string ->   (* default: "ocamlmktop" *)
+       ?ocamldep_command: string ->     (* default: "ocamldep"   *)
+       ?ocamlbrowser_command: string -> (* default: "ocamlbrowser"   *)
+@@ -105,8 +106,8 @@ val meta_directory : unit -> string
+ val search_path : unit -> string list
+   (** Get the search path for packages *)
+ 
+-val command : [ `ocamlc | `ocamlopt | `ocamlcp | `ocamlmktop | `ocamldep
+-	      | `ocamlbrowser | `ocamldoc
++val command : [ `ocamlc | `ocamlopt | `ocamlcp | `ocamlmklib 
++	      | `ocamlmktop | `ocamldep | `ocamlbrowser | `ocamldoc
+ 	      ] -> 
+               string
+   (** Get the name/path of the executable *)
+diff --git a/src/findlib/frontend.ml b/src/findlib/frontend.ml
+index 813180d..393f764 100644
+--- a/src/findlib/frontend.ml
++++ b/src/findlib/frontend.ml
+@@ -722,6 +722,7 @@ let ocamlc which () =
+     match which with
+       | "ocamlc"     -> Ocaml_args.ocamlc_spec
+       | "ocamlcp"    -> Ocaml_args.ocamlcp_spec
++      | "ocamlmklib" -> Ocaml_args.ocamlmklib_spec
+       | "ocamlmktop" -> Ocaml_args.ocamlmktop_spec
+       | "ocamlopt"   -> Ocaml_args.ocamlopt_spec
+       | _            -> None in
+@@ -752,7 +753,7 @@ let ocamlc which () =
+       "-ignore-error", Arg.Set ignore_error,
+                     "     Ignore the 'error' directive in META files";
+       "-passopt", Arg.String (fun s -> pass_options := !pass_options @ [s]),
+-               " <opt>    Pass option <opt> directly to ocamlc/opt/mktop\nSTANDARD OPTIONS:";
++               " <opt>    Pass option <opt> directly to ocamlc/opt/mklib/mktop\nSTANDARD OPTIONS:";
+       ];
+ 
+       merge_native_arguments 
+@@ -795,6 +796,7 @@ let ocamlc which () =
+   begin match which with
+     "ocamlc"     -> predicates := "byte" :: !predicates;
+   | "ocamlcp"    -> predicates := "byte" :: !predicates;
++  | "ocamlmklib" -> ();
+   | "ocamlmktop" -> predicates := "byte" :: "create_toploop" :: !predicates;
+   | "ocamlopt"   -> predicates := "native" :: !predicates;
+   | _            -> failwith "unsupported backend"
+@@ -1066,7 +1068,12 @@ let ocamlc which () =
+ 	 (fun pkg -> ["-dllpath";  slashify pkg] )
+ 	 dll_dirs) in
+ 
++  let mklib_options =
++    ["-ocamlc"; Findlib.command `ocamlc;
++     "-ocamlopt"; Findlib.command `ocamlopt] in
++
+   let arguments =
++    (if which = "ocamlmklib" then mklib_options else []) @
+     !pass_options @    (* other options from the command line *)
+     i_options @        (* Generated -I options from package analysis *)
+     pp_command @       (* Optional preprocessor command *)
+@@ -1082,6 +1089,7 @@ let ocamlc which () =
+ 	"ocamlc"     -> Findlib.command `ocamlc
+       | "ocamlopt"   -> Findlib.command `ocamlopt
+       | "ocamlcp"    -> Findlib.command `ocamlcp
++      | "ocamlmklib" -> Findlib.command `ocamlmklib
+       | "ocamlmktop" -> Findlib.command `ocamlmktop
+       | _            -> assert false
+   in
+@@ -2071,6 +2079,7 @@ let rec select_mode () =
+     | ("remove"|"-remove")                 -> incr Arg.current; M_remove
+     | ("ocamlc"|"-ocamlc"|"c")             -> incr Arg.current; M_compiler "ocamlc"
+     | ("ocamlcp"|"-ocamlcp"|"cp")          -> incr Arg.current; M_compiler "ocamlcp"
++    | ("ocamlmklib"|"-ocamlmklib"|"mklib") -> incr Arg.current; M_compiler "ocamlmklib"
+     | ("ocamlmktop"|"-ocamlmktop"|"mktop") -> incr Arg.current; M_compiler "ocamlmktop"
+     | ("ocamlopt"|"-ocamlopt"|"opt")       -> incr Arg.current; M_compiler "ocamlopt"
+     | ("ocamldep"|"-ocamldep"|"dep")       -> incr Arg.current; M_dep
+@@ -2126,6 +2135,7 @@ let main() =
+       prerr_endline "Usage: ocamlfind query        [-help | other options] <package_name> ...";
+       prerr_endline "   or: ocamlfind ocamlc       [-help | other options] <file> ...";
+       prerr_endline "   or: ocamlfind ocamlcp      [-help | other options] <file> ...";
++      prerr_endline "   or: ocamlfind ocamlmklib   [-help | other options] <file> ...";
+       prerr_endline "   or: ocamlfind ocamlmktop   [-help | other options] <file> ...";
+       prerr_endline "   or: ocamlfind ocamlopt     [-help | other options] <file> ...";
+       prerr_endline "   or: ocamlfind ocamldep     [-help | other options] <file> ...";
+diff --git a/tools/extract_args/extract_args.ml b/tools/extract_args/extract_args.ml
+index 9f28e52..7fefdaa 100644
+--- a/tools/extract_args/extract_args.ml
++++ b/tools/extract_args/extract_args.ml
+@@ -29,7 +29,7 @@ let get_help cmd =
+   let help_out =
+     try
+       let code =
+-	Sys.command (sprintf "%s -help >%s" 
++	Sys.command (sprintf "%s -help >%s 2>&1"
+ 		       cmd
+ 		       (Filename.quote temp_file)) in
+       if code <> 0 then 
+@@ -43,7 +43,7 @@ let get_help cmd =
+ ;;
+ 
+ 
+-let switch_re = Str.regexp "[ \t]*\\(-[-a-zA-Z0-9_]*\\)[ \t]\\(.*\\)$";;
++let switch_re = Str.regexp "[ \t]*\\(-[-a-zA-Z0-9_,]*\\)[ \t]?\\(.*\\)$";;
+ 
+ let argument_re = Str.regexp "[ \t]*[<[]";;
+ 
