@@ -5,7 +5,7 @@ PortSystem          1.0
 name                arm-linux-gnueabi-ocaml-compiler
 version             3.12.1
 set major-version   [join [lrange [split ${version} .] 0 1] .]
-revision            1
+revision            2
 categories          cross lang ml
 maintainers         googlemail.com:benedikt.meurer
 license             {QPL LGPL}
@@ -36,7 +36,8 @@ depends_run         bin:ocamlrun:ocaml \
                     port:${crossgcc-target}-ocaml-runtime
 
 patch.pre_args      -p1
-patchfiles          patch-arm-cross-compile-nativeint.diff
+patchfiles          patch-arm-add-type-directives-for-code-symbols.patch \
+                    patch-arm-cross-compile-nativeint.diff
  
 # All cross ports violate the mtree layout
 destroot.violate_mtree  yes
