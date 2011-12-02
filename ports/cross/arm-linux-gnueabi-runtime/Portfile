@@ -3,8 +3,7 @@
 
 PortSystem          1.0
 name                arm-linux-gnueabi-runtime
-version             20111127
-revision            3
+version             20111202
 categories          cross devel
 maintainers         googlemail.com:benedikt.meurer
 license             LGPL-2+
@@ -13,7 +12,7 @@ long_description    ${description}
 
 # Parameters for this port
 set crossgcc-target arm-linux-gnueabi
-set binutils-version 2.20.1-16
+set binutils-version 2.22-1
 set eglibc-version 2.11.2-10
 set gdbm-version 1.8.3-9
 set linux-version 2.6.32-39
@@ -43,9 +42,9 @@ distfiles           binutils-dev_${binutils-version}_armel.deb:binutils \
                     zlib1g_${zlib-version}_armel.deb:zlib
 worksrcdir          ${name}-${version}
 checksums           binutils-dev_${binutils-version}_armel.deb \
-                        md5 7f56f72c68fe464d1fd99f7647ef9d44 \
-                        sha1 d62e4746a8235c8faafc28717bfe6c7c57ed3a2c \
-                        rmd160 13607389b335a3bc6ca127e54b7758583466fc9d \
+                        md5     e82f7ca55d3c4bb3f491f16d76e0d61f \
+                        sha1    75cf847f2b0dbae90f72d7d94fb31f636af4fe08 \
+                        rmd160  9ef3d0ac4e2f2e40b5a0cd0cff7bc3bb3bc41326 \
                     libc6-dev_${eglibc-version}_armel.deb \
                         md5 5ddc618d996fe28753cd8cec153dcc65 \
                         sha1 7a040bea49d2e34599d2326e05e2c67ef8ed7557 \
