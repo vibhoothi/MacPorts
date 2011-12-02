@@ -1,0 +1,49 @@
+# DP: It does not really harm by including them since nobody should use them
+# DP: but gas does not wont to assmebly hard float since they are not
+# DP: available on this cpu. Upstream did not respond.
+
+--- a/src/gcc/config/rs6000/crtresfpr.asm
++++ b/src/gcc/config/rs6000/crtresfpr.asm
+@@ -33,6 +33,7 @@
+ 
+ /* On PowerPC64 Linux, these functions are provided by the linker.  */
+ #ifndef __powerpc64__
++#ifndef __NO_FPRS__
+ 
+ /* Routines for restoring floating point registers, called by the compiler.  */
+ /* Called with r11 pointing to the stack header word of the caller of the */
+@@ -79,3 +80,4 @@
+ CFI_ENDPROC
+ 
+ #endif
++#endif
+--- a/src/gcc/config/rs6000/crtresxfpr.asm
++++ b/src/gcc/config/rs6000/crtresxfpr.asm
+@@ -33,6 +33,7 @@
+ 
+ /* On PowerPC64 Linux, these functions are provided by the linker.  */
+ #ifndef __powerpc64__
++#ifndef __NO_FPRS__
+ 
+ /* Routines for restoring floating point registers, called by the compiler.  */
+ /* Called with r11 pointing to the stack header word of the caller of the */
+@@ -124,3 +125,4 @@
+ CFI_ENDPROC
+ 
+ #endif
++#endif
+--- a/src/gcc/config/rs6000/crtsavfpr.asm
++++ b/src/gcc/config/rs6000/crtsavfpr.asm
+@@ -33,6 +33,7 @@
+ 
+ /* On PowerPC64 Linux, these functions are provided by the linker.  */
+ #ifndef __powerpc64__
++#ifndef __NO_FPRS__
+ 
+ /* Routines for saving floating point registers, called by the compiler.  */
+ /* Called with r11 pointing to the stack header word of the caller of the */
+@@ -79,3 +80,4 @@
+ CFI_ENDPROC
+ 
+ #endif
++#endif

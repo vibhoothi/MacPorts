@@ -1,0 +1,33 @@
+# DP: Fix PR target/48226, Allow Iterator::vector vector on powerpc with VSX.
+
+--- a/src/gcc/testsuite/gcc.target/powerpc/pr48226.c	(revision 0)
++++ b/src/gcc/testsuite/gcc.target/powerpc/pr48226.c	(revision 0)
+@@ -0,0 +1,14 @@ 
++/* { dg-do compile } */
++/* { dg-skip-if "" { powerpc*-*-darwin* } { "*" } { "" } } */
++/* { dg-require-effective-target powerpc_vsx_ok } */
++/* { dg-options "-O3 -mcpu=power7" } */
++
++/* The bug shows up if you compile with -maltivec or -mcpu=power7, due to one
++   of the vector's being eliminated due to rs6000_macro_to_expand being called
++   recursively.  */
++
++struct vector {
++  float v[4];
++};
++
++struct vector vector = { 1.0, 2.0, 3.0, 4.0 };
+--- a/src/gcc/config/rs6000/rs6000-c.c	(revision 171246)
++++ b/src/gcc/config/rs6000/rs6000-c.c	(working copy)
+@@ -182,7 +182,10 @@ rs6000_macro_to_expand (cpp_reader *pfil
+ 	  expand_this = C_CPP_HASHNODE (__vector_keyword);
+ 	  expand_bool_pixel = __bool_keyword;
+ 	}
+-      else if (ident)
++      /* The boost libraries have code with Iterator::vector vector in it.  If
++	 we allow the normal handling, this module will be called recursively,
++	 and the vector will be skipped.; */
++      else if (ident && (ident != C_CPP_HASHNODE (__vector_keyword)))
+ 	{
+ 	  enum rid rid_code = (enum rid)(ident->rid_code);
+ 	  if (ident->type == NT_MACRO)

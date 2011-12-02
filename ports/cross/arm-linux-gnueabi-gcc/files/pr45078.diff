@@ -1,0 +1,41 @@
+# DP: Proposed patch for PR plugin/45078
+
+2011-06-24  Matthias Klose  <doko@ubuntu.com>
+
+	PR plugin/45078
+	* Makefile.in (PLUGIN_HEADERS): Add config/arm/arm-cores.def.
+	(install-plugin): Install c-family headers into a c-family subdir.
+	* config.gcc: Add vxworks-dummy.h to tm_file for arm, mips, sh and
+	sparc targets.
+
+--- a/src/gcc/Makefile.in
++++ b/src/gcc/Makefile.in
+@@ -4503,6 +4503,7 @@
+   $(EXCEPT_H) tree-ssa-sccvn.h real.h output.h $(IPA_UTILS_H) \
+   $(C_PRAGMA_H)  $(CPPLIB_H)  $(FUNCTION_H) \
+   cppdefault.h flags.h $(MD5_H) params.def params.h prefix.h tree-inline.h \
++  config/arm/arm-cores.def \
+   $(IPA_PROP_H) $(RTL_H) $(TM_P_H) $(CFGLOOP_H) $(EMIT_RTL_H) version.h
+ 
+ # generate the 'build fragment' b-header-vars
+@@ -4527,7 +4528,7 @@
+ 	  else continue; \
+ 	  fi; \
+ 	  case $$path in \
+-	  "$(srcdir)"/config/* | "$(srcdir)"/*.def ) \
++	  "$(srcdir)"/config/* | "$(srcdir)"/c-family/* | "$(srcdir)"/*.def ) \
+ 	    base=`echo "$$path" | sed -e "s|$$srcdirstrip/||"`;; \
+ 	  *) base=`basename $$path` ;; \
+ 	  esac; \
+--- a/src/gcc/config.gcc
++++ b/src/gcc/config.gcc
+@@ -467,6 +467,9 @@
+ 	fi
+ 	tm_file="vxworks-dummy.h ${tm_file}"
+ 	;;
++arm*-*-*|mips*-*-*|sh*-*-*|sparc*-*-*)
++	tm_file="vxworks-dummy.h ${tm_file}"
++	;;
+ esac
+ 
+ # On a.out targets, we need to use collect2.

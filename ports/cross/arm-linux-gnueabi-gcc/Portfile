@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 name                arm-linux-gnueabi-gcc
-version             4.4.6
+version             4.6.2
 categories          cross lang
 maintainers         googlemail.com:benedikt.meurer
 license             {GPL-3+ Permissive}
@@ -13,13 +13,12 @@ long_description    ${description}
 homepage            http://gcc.gnu.org/
 platforms           darwin
 master_sites        gnu:gcc/gcc-${version}
-distfiles           gcc-core-${version}.tar.bz2
+distfiles           gcc-${version}.tar.bz2
 use_bzip2           yes
 universal_variant   no
-checksums           gcc-core-${version}.tar.bz2 \
-                        md5 c618dde07a74e0d28ba3acd487bb0f3b \
-                        sha1 f305ef9c57e8016d37e7726091cb9d5c4013f9aa \
-                        rmd160 9bb03852015c16a041566007b83c179178fe06f9
+checksums           md5    028115c4fbfb6cfd75d6369f4a90d87e \
+                    sha1   691974613b1c1f15ed0182ec539fa54a12dd6f93 \
+                    rmd160 e7041933b39629f9524848dcf81a1a4c02a225c6
 worksrcdir          gcc-${version}
 
 # Parameters for this port.
@@ -34,34 +33,68 @@ depends_lib         bin:${crossgcc-target}-ar:${crossgcc-target}-binutils \
                     bin:${crossgcc-target}-strip:${crossgcc-target}-binutils \
                     port:${crossgcc-target}-runtime \
                     port:gmp \
-                    port:mpfr \
-                    port:libiconv
+                    port:libiconv \
+                    port:libmpc \
+                    port:mpfr
 
-patchfiles          001-gcc-glimits-MB_LEN_MAX.patch \
-                    100-alpha-mieee-default.patch \
-                    110-trampolinewarn.patch \
-                    130-cross-compile.patch \
-                    140-default-format-security.patch \
-                    150-default-fortify-source.patch \
-                    160-netbsd-symbolic.patch \
-                    170-sparc64-bsd.patch \
-                    180-libgomp-no-werror.patch \
-                    190-flatten-switch-stmt-00.patch \
-                    200-libiberty.h-asprintf.patch \
-                    210-arm-unbreak-armv4t.patch \
-                    220-libiberty-pic.patch \
-                    230-superh-default-multilib.patch \
-                    250-ia64-noteGNUstack.patch \
-                    260-sh-libgcc-stacks.patch \
-                    270-sh-pr24836.patch \
-                    280-freebsd.patch \
-                    290-freebsd.patch \
-                    360-arm-bigendian.patch \
-                    370-bootstrap-target_lib_path.patch \
-                    380-powerpc-libgcc_s-link-libm.patch \
-                    390-arm-softfloat-libgcc.patch \
-                    410-libgcc_eh.a.patch
-patch.pre_args      -p1
+patchfiles          gcc-gfdl-build.diff \
+                    gcc-textdomain.diff \
+                    gcc-driver-extra-langs.diff \
+                    gcc-hash-style-both.diff \
+                    libstdc++-pic.diff \
+                    libstdc++-doclink.diff \
+                    libstdc++-man-3cxx.diff \
+                    libstdc++-test-installed.diff \
+                    libjava-stacktrace.diff \
+                    libjava-jnipath.diff \
+                    libjava-sjlj.diff \
+                    libjava-disable-plugin.diff \
+                    alpha-no-ev4-directive.diff \
+                    boehm-gc-getnprocs.diff \
+                    note-gnu-stack.diff \
+                    libgomp-omp_h-multilib.diff \
+                    sparc-force-cpu.diff \
+                    pr24619.diff \
+                    gccgo-version.diff \
+                    no_fpr_in_libgcc.diff \
+                    pr48226.diff \
+                    pr47487.diff \
+                    mudflap-varargs.diff \
+                    pr45078.diff \
+                    pr43804.diff \
+                    pr49756.diff \
+                    pr49940.diff \
+                    pr49944.diff \
+                    gcc-cloog-dl.diff \
+                    libffi-kfreebsd.diff \
+                    gcc-base-version.diff \
+                    pr49696.diff \
+                    libffi-powerpc-sf.diff \
+                    libffi-powerpc-sysv-without-string-ops.diff \
+                    arm-dynamic-linker.diff \
+                    libjava-armel-unwind.diff \
+                    01-arm-64bitintrinsics-v2.diff \
+                    03-arm-pr48126-syncpos-v2.diff \
+                    04-arm-dmbmcr.diff \
+                    arm-multilib-soft-float.diff \
+                    libjava-disable-static.diff \
+                    s390-biarch.diff \
+                    mips-triarch.diff \
+                    cross-include.diff \
+                    cross-fixes.diff \
+                    gcc-ice-hack.diff \
+                    gcc-ice-apport.diff \
+                    libjava-fixed-symlinks.diff \
+                    libstdc++-arm-wno-abi.diff \
+                    libstdc++-no-testsuite.diff \
+                    ada-mips.diff \
+                    libffi-ro-eh_frame_sect.diff \
+                    libjava-nobiarch-check.diff \
+                    config-ml.diff \
+                    gcc-system-root.diff \
+                    libgomp-kfreebsd-testsuite.diff \
+                    armhf-triplet.diff
+patch.pre_args      -p2
 
 # All cross ports violate the mtree layout
 destroot.violate_mtree  yes
@@ -102,8 +135,9 @@ configure.args      --infodir='${prefix}/share/info' \
                     --with-float=soft \
                     --with-gmp='${prefix}' \
                     --with-local-prefix='${prefix}/${crossgcc-target}/sysroot' \
+                    --with-mpc='${prefix}' \
                     --with-mpfr='${prefix}' \
-                    --with-pkgversion='MacPorts 2011/11/27' \
+                    --with-pkgversion='MacPorts 2011/12/02' \
                     --with-sysroot='${prefix}/${crossgcc-target}/sysroot' \
                     --with-system-zlib \
                     --disable-checking \

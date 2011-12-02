@@ -1,0 +1,25 @@
+      Micahel K. Edwards points out in PR/48126 that the sync is in the wrong place
+      relative to the branch target of the compare, since the load could float
+      up beyond the ldrex.
+    
+        gcc/
+    	* config/arm/arm.c (arm_output_sync_loop): Move label before barier,
+    						   fixes PR/48126
+
+diff --git a/src/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
+index 28be078..cee3471 100644
+--- a/src/gcc/config/arm/arm.c
++++ b/src/gcc/config/arm/arm.c
+@@ -23780,8 +23780,11 @@ arm_output_sync_loop (emit_f emit,
+ 	}
+     }
+ 
+-  arm_process_output_memory_barrier (emit, NULL);
++  /* Note: label is before barrier so that in cmp failure case we still get
++     a barrier to stop subsequent loads floating upwards past the ldrex
++     pr/48126 */
+   arm_output_asm_insn (emit, 1, operands, "%sLSYB%%=:", LOCAL_LABEL_PREFIX);
++  arm_process_output_memory_barrier (emit, NULL);
+ }
+ 
+ static rtx

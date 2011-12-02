@@ -1,0 +1,26 @@
+# DP: For ARM hard float, set the dynamic linker to
+# DP: /lib/arm-linux-gnueabihf/ld-linux.so.3.
+
+--- a/src/gcc/config/arm/linux-elf.h
++++ b/src/gcc/config/arm/linux-elf.h
+@@ -62,14 +62,18 @@
+ 
+ #define LIBGCC_SPEC "%{msoft-float:-lfloat} %{mfloat-abi=soft*:-lfloat} -lgcc"
+ 
+-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
++#define LINUX_DYNAMIC_LINKER_SF "/lib/ld-linux.so.3"
++#define LINUX_DYNAMIC_LINKER_HF "/lib/arm-linux-gnueabihf/ld-linux.so.3"
+ 
+ #define LINUX_TARGET_LINK_SPEC  "%{h*} \
+    %{static:-Bstatic} \
+    %{shared:-shared} \
+    %{symbolic:-Bsymbolic} \
+    %{rdynamic:-export-dynamic} \
+-   -dynamic-linker " LINUX_DYNAMIC_LINKER " \
++   %{msoft-float:-dynamic-linker " LINUX_DYNAMIC_LINKER_SF "} \
++   %{mfloat-abi=soft*:-dynamic-linker " LINUX_DYNAMIC_LINKER_SF "} \
++   %{mhard-float:-dynamic-linker " LINUX_DYNAMIC_LINKER_HF "} \
++   %{mfloat-abi=hard:-dynamic-linker " LINUX_DYNAMIC_LINKER_HF "} \
+    -X \
+    --hash-style=both \
+    %{mbig-endian:-EB} %{mlittle-endian:-EL}" \
