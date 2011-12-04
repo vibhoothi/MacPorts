@@ -4,7 +4,7 @@
 PortSystem          1.0
 name                arm-linux-gnueabi-ocaml-runtime
 version             3.12.1
-revision            3
+revision            2
 categories          cross lang
 maintainers         googlemail.com:benedikt.meurer
 license             {LGPL QPL}
@@ -75,4 +75,12 @@ destroot {
     # Install files by copying them
     xinstall -d "${destroot}${prefix}/${crossgcc-target}"
     file copy "${worksrcpath}" "${destroot}${prefix}/${crossgcc-target}/sysroot"
+
+    # Install native dynlink files
+    foreach f [list "dynlink.a" "dynlink.cmx" "dynlink.cmxa"] {
+        file copy -force "${filespath}/$f" \
+            "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml"
+    }
+    file copy -force "${filespath}/META.dynlink" \
+        "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml/METAS"
 }
