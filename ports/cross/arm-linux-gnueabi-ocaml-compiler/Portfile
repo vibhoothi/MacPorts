@@ -5,7 +5,7 @@ PortSystem          1.0
 name                arm-linux-gnueabi-ocaml-compiler
 version             3.12.1
 set major-version   [join [lrange [split ${version} .] 0 1] .]
-revision            2
+revision            3
 categories          cross lang ml
 maintainers         googlemail.com:benedikt.meurer
 license             {QPL LGPL}
@@ -71,12 +71,27 @@ post-build {
     # Build the cross compiler and essential tools
     system -W "${worksrcpath}" "${build.cmd} -C byterun libcamlrun.a"
     system -W "${worksrcpath}" "${build.cmd} ocaml ocamlc"
-    system -W "${worksrcpath}" "${build.cmd} -C stdlib"
-    system -W "${worksrcpath}" "${build.cmd} -C tools ocamldep ocamlmklib"
+    system -W "${worksrcpath}" "${build.cmd} -C stdlib all"
+    system -W "${worksrcpath}" "${build.cmd} CAMLOPT=\"${prefix}/bin/ocamlopt.opt\" -C tools ocamldep ocamlmklib"
     system -W "${worksrcpath}" "${build.cmd} ocamlopt"
+    system -W "${worksrcpath}" "${build.cmd} CAMLOPT=\"${prefix}/bin/ocamlopt.opt\" ocamlopt.opt"
+    system -W "${worksrcpath}" "${build.cmd} CAMLOPT=\"${prefix}/bin/ocamlopt.opt\" -C tools ocamldep.opt"
 }
 
 destroot {
+    # Setup a custom ocamlfind config for the cross-compiler
+    file mkdir \
+        "${destroot}${prefix}/etc"
+    file copy \
+        "${filespath}/arm-linux-gnueabi-ocamlfind.conf.in" \
+        "${destroot}${prefix}/etc/arm-linux-gnueabi-ocamlfind.conf"
+    reinplace \
+        "s|@prefix@|${prefix}|g" \
+        "${destroot}${prefix}/etc/arm-linux-gnueabi-ocamlfind.conf"
+    reinplace \
+        "s|@target@|${crossgcc-target}|g" \
+        "${destroot}${prefix}/etc/arm-linux-gnueabi-ocamlfind.conf"
+
     # Install the cross compiler and tools by copying
     file mkdir \
         "${destroot}${prefix}/bin" \
@@ -84,15 +99,18 @@ destroot {
     file copy \
         "${worksrcpath}/ocamlc" \
         "${worksrcpath}/ocamlopt" \
+        "${worksrcpath}/ocamlopt.opt" \
         "${worksrcpath}/tools/ocamldep" \
+        "${worksrcpath}/tools/ocamldep.opt" \
         "${worksrcpath}/tools/ocamlmklib" \
         "${destroot}${prefix}/${crossgcc-target}/bin"
 
     # Create links with target- prefix
-    foreach f [list ocamlc ocamlopt ocamldep ocamlmklib] {
+    foreach f [glob -directory "${destroot}${prefix}/${crossgcc-target}/bin" -type f "*"] {
+        set n [file tail "$f"]
         file link -hard \
-            "${destroot}${prefix}/bin/${crossgcc-target}-$f" \
-            "${destroot}${prefix}/${crossgcc-target}/bin/$f"
+            "${destroot}${prefix}/bin/${crossgcc-target}-$n" \
+            "$f"
     }
 }
 

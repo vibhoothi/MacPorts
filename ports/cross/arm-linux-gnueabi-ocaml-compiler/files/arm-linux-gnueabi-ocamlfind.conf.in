@@ -1,0 +1,7 @@
+path="@prefix@/@target@/sysroot/usr/lib/ocaml:@prefix@/@target@/sysroot/usr/lib/ocaml/METAS"
+destdir="@prefix@/@target@/sysroot/usr/lib/ocaml"
+ocamlc="@target@-ocamlc"
+ocamldep="@target@-ocamldep.opt"
+ocamlopt="@target@-ocamlopt.opt"
+ocamlmklib="@target@-ocamlmklib"
+stdlib="@prefix@/@target@/sysroot/usr/lib/ocaml"
