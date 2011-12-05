@@ -3,9 +3,11 @@
 
 # Parameters for this port.
 set crossgcc-target arm-linux-gnueabi
+set crossgcc-flags  [list --with-float=soft \
+                     --enable-interwork]
 
 PortSystem          1.0
-name                arm-linux-gnueabi-gcc
+name                ${crossgcc-target}-gcc
 version             4.6.2
 revision            1
 categories          cross lang
@@ -133,7 +135,6 @@ configure.args      --infodir='${prefix}/share/info' \
                     --mandir='${prefix}/share/man' \
                     --program-prefix=${crossgcc-target}- \
                     --target=${crossgcc-target} \
-                    --with-float=soft \
                     --with-gmp='${prefix}' \
                     --with-local-prefix='${prefix}/${crossgcc-target}/sysroot' \
                     --with-mpc='${prefix}' \
@@ -149,13 +150,13 @@ configure.args      --infodir='${prefix}/share/info' \
                     --disable-nls \
                     --enable-__cxa_atexit \
                     --enable-c99 \
-                    --enable-interwork \
                     --enable-languages='c' \
                     --enable-long-long \
                     --enable-shared \
                     --enable-symvers=gnu \
                     --enable-target-optspace \
-                    --enable-threads=posix
+                    --enable-threads=posix \
+                    ${crossgcc-flags}
 if {${os.platform} == "darwin" && ($build_arch == "x86_64" || $build_arch == "ppc64")} {
     configure.args-append   --build=${build_arch}-apple-darwin${os.version} \
                             --host=${build_arch}-apple-darwin${os.version}
