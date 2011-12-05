@@ -1,0 +1,118 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+# Parameters for this port
+set crossgcc-target i486-linux-gnu
+set debian-arch i386
+set binutils-version 2.22-1
+set eglibc-version 2.11.2-10
+set gdbm-version 1.8.3-9
+set linux-version 2.6.32-39
+set ncurses-version 5.9-4
+set zlib-version 1.2.3.4.dfsg-3
+
+PortSystem          1.0
+name                ${crossgcc-target}-runtime
+version             20111205
+categories          cross devel
+maintainers         googlemail.com:benedikt.meurer
+license             LGPL-2+
+description         Debian ${debian-arch} runtime, headers and import libraries.
+long_description    ${description}
+
+homepage            http://www.debian.org/
+platforms           darwin
+supported_archs     noarch
+master_sites        debian:b/binutils/:binutils \
+                    debian:e/eglibc/:eglibc \
+                    debian:g/gdbm/:gdbm \
+                    debian:l/linux-2.6/:linux \
+                    debian:n/ncurses/:ncurses \
+                    debian:z/zlib/:zlib
+distfiles           binutils-dev_${binutils-version}_${debian-arch}.deb:binutils \
+                    libc6-dev_${eglibc-version}_${debian-arch}.deb:eglibc \
+                    libc6-pic_${eglibc-version}_${debian-arch}.deb:eglibc \
+                    libc6_${eglibc-version}_${debian-arch}.deb:eglibc \
+                    libgdbm-dev_${gdbm-version}_${debian-arch}.deb:gdbm \
+                    libgdbm3_${gdbm-version}_${debian-arch}.deb:gdbm \
+                    linux-libc-dev_${linux-version}_${debian-arch}.deb:linux \
+                    libncurses5-dev_${ncurses-version}_${debian-arch}.deb:ncurses \
+                    libtinfo-dev_${ncurses-version}_${debian-arch}.deb:ncurses \
+                    libtinfo5_${ncurses-version}_${debian-arch}.deb:ncurses \
+                    zlib1g-dev_${zlib-version}_${debian-arch}.deb:zlib \
+                    zlib1g_${zlib-version}_${debian-arch}.deb:zlib
+worksrcdir          ${name}-${version}
+checksums           binutils-dev_${binutils-version}_${debian-arch}.deb \
+                        md5    73e37d896da478d486144d87238abcf7 \
+                        sha1   fb804b1b9aca87a44e503d3dfbf063c00e7da960 \
+                        rmd160 c6307f89ebc050f44f87bfffd8f3e3afbe4e98ab \
+                    libc6-dev_${eglibc-version}_${debian-arch}.deb \
+                        md5    8d53fe73c5c16bd40bed500d0e7b1aeb \
+                        sha1   da450edb6bd45838128135510542c2c6cbb367b6 \
+                        rmd160 410c77080d8fae4f7849db0b95c803ca43f282ec \
+                    libc6-pic_${eglibc-version}_${debian-arch}.deb \
+                        md5    decd8c425a5dd49be1d13bd20b649049 \
+                        sha1   d4b118c0caf98c02bba517fca4c7654645948d5b \
+                        rmd160 604fcf8fc431eb0c079e5fbaafe37e975db316e6 \
+                    libc6_${eglibc-version}_${debian-arch}.deb \
+                        md5    4ff2833612e5baadfcc243588772f3ea \
+                        sha1   6ee03cfc934c0bc7eeb8726009d8b4fd9c2debbd \
+                        rmd160 223cb2fce2fa8807074fd2aa7064acbf136d9312 \
+                    libgdbm-dev_${gdbm-version}_${debian-arch}.deb \
+                        md5    09a6b091e06dac2f9772d1542bbaff40 \
+                        sha1   d764fa0b95d9b9873b6e28c9d2e902ca4e2c57a8 \
+                        rmd160 0c823e451bdf79c9bf4d108dc1250db9c5fdffeb \
+                    libgdbm3_${gdbm-version}_${debian-arch}.deb \
+                        md5    cc0859fd9c0ea0a211e7f1a0da09ddc0 \
+                        sha1   7e2699b89bd5c622fe2bddd189c55154407d7013 \
+                        rmd160 8ec32cffb4a849f74ed8be14f304ecf981f45fb1 \
+                    linux-libc-dev_${linux-version}_${debian-arch}.deb \
+                        md5    817b9ab64888565229c1ca45a29b8f1a \
+                        sha1   7fe088d45e5091acbd3b308d58e61dc26bb87a36 \
+                        rmd160 4fb852015a3c11b66e06cd5fb64253b31e0f69f7 \
+                    libncurses5-dev_${ncurses-version}_${debian-arch}.deb \
+                        md5    9dbe3d990ea8ca883eee61db48514693 \
+                        sha1   3b0bf6c99c927cbbde2f8653c42583272f3965c4 \
+                        rmd160 0935b9ca1ccedaa696770fce6f80923dec713fc5 \
+                    libtinfo-dev_${ncurses-version}_${debian-arch}.deb \
+                        md5    7aeb8fda1d44d6a04502ada5d6d95bc0 \
+                        sha1   fb43e784612b71f010dfb7346522b36eb6761683 \
+                        rmd160 f1f1d3dce4fc4c1554d2a717291789388d38d369 \
+                    libtinfo5_${ncurses-version}_${debian-arch}.deb \
+                        md5    21a6c59c11f43f2a042209d9389173ca \
+                        sha1   021721ac9ca5c226d23b9b5b224504c6178769a9 \
+                        rmd160 f162b2b616e1528e68e4d5ce5bfdb1180e231dec \
+                    zlib1g-dev_${zlib-version}_${debian-arch}.deb \
+                        md5    97d1a2a8a122489d306d8390a5f2d034 \
+                        sha1   a723868f28b43ab4f2f986cdba038e26e76acb6b \
+                        rmd160 837e8ca4a2ca0b42c0ad2d3a7cf1c8fa7ae4a2ec \
+                    zlib1g_${zlib-version}_${debian-arch}.deb \
+                        md5    37246cd4fe5d4cb0f7c03ce3082164a3 \
+                        sha1   3015f942ca5b4ae26cb608823c3ead865659abd2 \
+                        rmd160 4d6af8ba201bee9e8eac2ad652ef3682a08edc48
+
+depends_extract     bin:dpkg:dpkg
+
+
+# All cross ports violate the mtree layout
+destroot.violate_mtree  yes
+
+extract.suffix      .deb
+extract.cmd         dpkg
+extract.pre_args    -x
+extract.post_args   ${worksrcpath}
+use_configure       no
+build {
+    # Fix absolute symbolic links
+    foreach f [glob -directory "${worksrcpath}" -types l "*" "*/*" "*/*/*" "*/*/*/*"] {
+        set t [file readlink "$f"]
+        if [string equal -length 1 "$t" "/"] {
+            system "ln -fs '${prefix}/${crossgcc-target}/sysroot$t' $f"
+        }
+    }
+}
+destroot {
+    # Install files by copying them
+    xinstall -d "${destroot}${prefix}/${crossgcc-target}"
+    file copy "${worksrcpath}" "${destroot}${prefix}/${crossgcc-target}/sysroot"
+}
