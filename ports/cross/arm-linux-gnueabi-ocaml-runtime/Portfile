@@ -1,21 +1,22 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 # $Id$
 
+# Parameters for this port
+set crossgcc-target arm-linux-gnueabi
+set debian-arch     armel
+set findlib-version 1.2.7+debian-1+b1
+set ocaml-version   3.12.1-2
+set ounit-version   1.1.0-3+b2
+
 PortSystem          1.0
-name                arm-linux-gnueabi-ocaml-runtime
+name                ${crossgcc-target}-ocaml-runtime
 version             3.12.1
-revision            2
+revision            3
 categories          cross lang
 maintainers         googlemail.com:benedikt.meurer
 license             {LGPL QPL}
-description         Debian armel OCaml runtime files.
+description         Debian ${debian-arch} OCaml runtime files.
 long_description    ${description}
-
-# Parameters for this port
-set crossgcc-target arm-linux-gnueabi
-set findlib-version 1.2.7+debian-1+b1
-set ocaml-version ${version}-2
-set ounit-version 1.1.0-3+b2
 
 homepage            http://www.debian.org/
 platforms           darwin
@@ -23,29 +24,29 @@ supported_archs     noarch
 master_sites        debian:f/findlib/:findlib \
                     debian:o/ocaml/:ocaml \
                     debian:o/ounit/:ounit
-distfiles           libfindlib-ocaml-dev_${findlib-version}_armel.deb:findlib \
-                    libfindlib-ocaml_${findlib-version}_armel.deb:findlib \
-                    ocaml-base-nox_${ocaml-version}_armel.deb:ocaml \
-                    ocaml-nox_${ocaml-version}_armel.deb:ocaml \
-                    libounit-ocaml-dev_${ounit-version}_armel.deb:ounit
+distfiles           libfindlib-ocaml-dev_${findlib-version}_${debian-arch}.deb:findlib \
+                    libfindlib-ocaml_${findlib-version}_${debian-arch}.deb:findlib \
+                    ocaml-base-nox_${ocaml-version}_${debian-arch}.deb:ocaml \
+                    ocaml-nox_${ocaml-version}_${debian-arch}.deb:ocaml \
+                    libounit-ocaml-dev_${ounit-version}_${debian-arch}.deb:ounit
 worksrcdir          ${name}-${version}
-checksums           libfindlib-ocaml-dev_${findlib-version}_armel.deb \
+checksums           libfindlib-ocaml-dev_${findlib-version}_${debian-arch}.deb \
                         md5 ce11f80102b5df1cae116127277ac241 \
                         sha1 6c8ab75e5678f5ff724f94ea29713a1bf49637fd \
                         rmd160 47fea39745e6b540d591f7acb5ccfa4a7a82101c \
-                    libfindlib-ocaml_${findlib-version}_armel.deb \
+                    libfindlib-ocaml_${findlib-version}_${debian-arch}.deb \
                         md5 f3b9574b58440470c88654de473b0033 \
                         sha1 dc6eda7864b317a384c97fcc9145c1c0a3fed352 \
                         rmd160 714dddf8a1f5ba998c1225b08551f67a1c81ed6e \
-                    ocaml-base-nox_${ocaml-version}_armel.deb \
+                    ocaml-base-nox_${ocaml-version}_${debian-arch}.deb \
                         md5 d0b286f506cf2df08dce2bd3d425de1e \
                         sha1 30ec10b1d54bbefbbc56b979ce567f18c3880389 \
                         rmd160 9bcabfc1e33412764ab2cd8f3c274160ed0aa5b9 \
-                    ocaml-nox_${ocaml-version}_armel.deb \
+                    ocaml-nox_${ocaml-version}_${debian-arch}.deb \
                         md5 5b482feadac119ec826674d1cef58395 \
                         sha1 b43eae0c6c43b6e19835c0d730aeb87f31716dbc \
                         rmd160 6875455bfc7913e15b33901bd940bdd5748571da \
-                    libounit-ocaml-dev_${ounit-version}_armel.deb \
+                    libounit-ocaml-dev_${ounit-version}_${debian-arch}.deb \
                         md5    2e0d2ff4cf966d761a34ecd94d1b4872 \
                         sha1   deb0794d25b68819a23ba904f7c3424df99fd931 \
                         rmd160 95626021d627551e05d9d73fe94281cf90ae1e6c
@@ -76,11 +77,13 @@ destroot {
     xinstall -d "${destroot}${prefix}/${crossgcc-target}"
     file copy "${worksrcpath}" "${destroot}${prefix}/${crossgcc-target}/sysroot"
 
-    # Install native dynlink files
-    foreach f [list "dynlink.a" "dynlink.cmx" "dynlink.cmxa"] {
-        file copy -force "${filespath}/$f" \
-            "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml"
+    # Install native dynlink files for armel
+    if {${debian-arch} == "armel"} {
+        foreach f [list "dynlink.a" "dynlink.cmx" "dynlink.cmxa"] {
+            file copy -force "${filespath}/$f" \
+                "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml"
+        }
+        file copy -force "${filespath}/META.dynlink" \
+            "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml/METAS"
     }
-    file copy -force "${filespath}/META.dynlink" \
-        "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml/METAS"
 }
