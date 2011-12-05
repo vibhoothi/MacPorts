@@ -138,7 +138,7 @@ configure.args      --infodir='${prefix}/share/info' \
                     --with-local-prefix='${prefix}/${crossgcc-target}/sysroot' \
                     --with-mpc='${prefix}' \
                     --with-mpfr='${prefix}' \
-                    --with-pkgversion='MacPorts 2011/12/02' \
+                    --with-pkgversion='MacPorts for ${crossgcc-target}' \
                     --with-sysroot='${prefix}/${crossgcc-target}/sysroot' \
                     --with-system-zlib \
                     --disable-checking \
