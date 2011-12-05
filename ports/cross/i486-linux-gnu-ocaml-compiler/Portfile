@@ -1,0 +1,121 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+# Parameters for this port.
+set crossgcc-target i486-linux-gnu
+
+PortSystem          1.0
+name                ${crossgcc-target}-ocaml-compiler
+version             3.12.1
+set major-version   [join [lrange [split ${version} .] 0 1] .]
+categories          cross lang ml
+maintainers         googlemail.com:benedikt.meurer
+license             {QPL LGPL}
+description         OCaml ${crossgcc-target} cross compiler.
+long_description    ${description}
+
+homepage            http://www.ocaml.org/
+platforms           darwin
+master_sites        http://caml.inria.fr/pub/distrib/ocaml-${major-version}/ \
+                    ftp://ftp.inria.fr/INRIA/Projects/cristal/ocaml/ocaml-${major-version}
+distname            ocaml-${version}
+worksrcdir          ocaml-${version}
+use_bzip2           yes
+universal_variant   no
+checksums           md5    227a3daaedb150bf5037a3db01f5bf42 \
+                    sha1   29b44117b116b1a5bc54a8b4514af483793a769f \
+                    rmd160 61d38c0785491c8790ac02ab78fb2f26ea490fc1
+
+depends_lib         bin:${crossgcc-target}-ar:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-as:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-ld:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-ranlib:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-gcc:${crossgcc-target}-gcc
+depends_run         bin:ocamlrun:ocaml \
+                    port:${crossgcc-target}-ocaml-runtime
+
+patch.pre_args      -p1
+patchfiles          patch-arm-add-type-directives-for-code-symbols.patch \
+                    patch-arm-cross-compile-nativeint.diff \
+                    patch-i386-cross-compile-nativeint.diff
+ 
+# All cross ports violate the mtree layout
+destroot.violate_mtree  yes
+
+use_parallel_build  no
+
+configure.compiler  gcc-4.2
+configure.pre_args  -prefix '${prefix}'
+configure.args      -no-curses \
+                    -no-tk \
+                    -cc \"${configure.cc}\" \
+                    -aspp \"${configure.cc} -c \"
+build.target        coldstart
+
+post-build {
+    # Now copy the target configuration
+    file copy -force \
+        "${filespath}/Makefile" \
+        "${filespath}/s.h" \
+        "${worksrcpath}/config"
+    file copy -force \
+        "${filespath}/${crossgcc-target}-m.h" \
+        "${worksrcpath}/config/m.h"
+    reinplace "s|@prefix@|${prefix}|g" "${worksrcpath}/config/Makefile"
+    reinplace "s|@target@|${crossgcc-target}|g" "${worksrcpath}/config/Makefile"
+
+    # Now clean the temporary files from the previous build. This
+    # will also cause asmcomp/arch.ml (etc) to be linked to the target
+    # versions, essentially causing ocamlopt to use the target code
+    # generator.
+    system -W "${worksrcpath}" "${build.cmd} partialclean"
+
+    # Build the cross compiler and essential tools
+    system -W "${worksrcpath}" "${build.cmd} -C byterun libcamlrun.a"
+    system -W "${worksrcpath}" "${build.cmd} ocaml ocamlc"
+    system -W "${worksrcpath}" "${build.cmd} -C stdlib all"
+    system -W "${worksrcpath}" "${build.cmd} CAMLOPT=\"${prefix}/bin/ocamlopt.opt\" -C tools ocamldep ocamlmklib"
+    system -W "${worksrcpath}" "${build.cmd} ocamlopt"
+    system -W "${worksrcpath}" "${build.cmd} CAMLOPT=\"${prefix}/bin/ocamlopt.opt\" ocamlopt.opt"
+    system -W "${worksrcpath}" "${build.cmd} CAMLOPT=\"${prefix}/bin/ocamlopt.opt\" -C tools ocamldep.opt"
+}
+
+destroot {
+    # Setup a custom ocamlfind config for the cross-compiler
+    file mkdir \
+        "${destroot}${prefix}/etc"
+    file copy \
+        "${filespath}/ocamlfind.conf.in" \
+        "${destroot}${prefix}/etc/${crossgcc-target}-ocamlfind.conf"
+    reinplace \
+        "s|@prefix@|${prefix}|g" \
+        "${destroot}${prefix}/etc/${crossgcc-target}-ocamlfind.conf"
+    reinplace \
+        "s|@target@|${crossgcc-target}|g" \
+        "${destroot}${prefix}/etc/${crossgcc-target}-ocamlfind.conf"
+
+    # Install the cross compiler and tools by copying
+    file mkdir \
+        "${destroot}${prefix}/bin" \
+        "${destroot}${prefix}/${crossgcc-target}/bin"
+    file copy \
+        "${worksrcpath}/ocamlc" \
+        "${worksrcpath}/ocamlopt" \
+        "${worksrcpath}/ocamlopt.opt" \
+        "${worksrcpath}/tools/ocamldep" \
+        "${worksrcpath}/tools/ocamldep.opt" \
+        "${worksrcpath}/tools/ocamlmklib" \
+        "${destroot}${prefix}/${crossgcc-target}/bin"
+
+    # Create links with target- prefix
+    foreach f [glob -directory "${destroot}${prefix}/${crossgcc-target}/bin" -type f "*"] {
+        set n [file tail "$f"]
+        file link -hard \
+            "${destroot}${prefix}/bin/${crossgcc-target}-$n" \
+            "$f"
+    }
+}
+
+livecheck.type      regex
+livecheck.url       http://caml.inria.fr/download.en.html
+livecheck.regex     "ocaml-\[0-9\.]+/ocaml-(\[0-9\.\]+).tar"

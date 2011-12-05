@@ -1,0 +1,43 @@
+diff --git a/asmcomp/i386/emit.mlp b/asmcomp/i386/emit.mlp
+index 881a936..89ae0d8 100644
+--- a/asmcomp/i386/emit.mlp
++++ b/asmcomp/i386/emit.mlp
+@@ -438,7 +438,7 @@ let emit_instr fallthrough i =
+             Reg n -> `	xorl	{emit_reg i.res.(0)}, {emit_reg i.res.(0)}\n`
+           | _     -> `	movl	$0, {emit_reg i.res.(0)}\n`
+         end else
+-          `	movl	${emit_nativeint n}, {emit_reg i.res.(0)}\n`
++          `	movl	${emit_nativeint (Nativeint.of_int32 (Nativeint.to_int32 n))}, {emit_reg i.res.(0)}\n`
+     | Lop(Iconst_float s) ->
+         begin match Int64.bits_of_float (float_of_string s) with
+         | 0x0000_0000_0000_0000L ->       (* +0.0 *)
+@@ -667,7 +667,7 @@ let emit_instr fallthrough i =
+     | Lop(Ispecific(Ilea addr)) ->
+         `	lea	{emit_addressing addr i.arg 0}, {emit_reg i.res.(0)}\n`
+     | Lop(Ispecific(Istore_int(n, addr))) ->
+-        `	movl	${emit_nativeint n}, {emit_addressing addr i.arg 0}\n`
++        `	movl	${emit_nativeint (Nativeint.of_int32 (Nativeint.to_int32 n))}, {emit_addressing addr i.arg 0}\n`
+     | Lop(Ispecific(Istore_symbol(s, addr))) ->
+         `	movl	${emit_symbol s}, {emit_addressing addr i.arg 0}\n`
+     | Lop(Ispecific(Ioffset_loc(n, addr))) ->
+@@ -691,7 +691,7 @@ let emit_instr fallthrough i =
+               stack_offset := !stack_offset + 4
+         done
+     | Lop(Ispecific(Ipush_int n)) ->
+-        `	pushl	${emit_nativeint n}\n`;
++        `	pushl	${emit_nativeint (Nativeint.of_int32 (Nativeint.to_int32 n))}\n`;
+         stack_offset := !stack_offset + 4
+     | Lop(Ispecific(Ipush_symbol s)) ->
+         `	pushl	${emit_symbol s}\n`;
+@@ -927,9 +927,9 @@ let emit_item = function
+   | Cint16 n ->
+       `	{emit_string word_dir}	{emit_int n}\n`
+   | Cint32 n ->
+-      `	.long	{emit_nativeint n}\n`
++      `	.long	{emit_nativeint (Nativeint.of_int32 (Nativeint.to_int32 n))}\n`
+   | Cint n ->
+-      `	.long	{emit_nativeint n}\n`
++      `	.long	{emit_nativeint (Nativeint.of_int32 (Nativeint.to_int32 n))}\n`
+   | Csingle f ->
+       emit_float32_directive ".long" f
+   | Cdouble f ->
