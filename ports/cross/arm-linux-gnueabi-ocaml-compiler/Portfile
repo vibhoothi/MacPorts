@@ -1,15 +1,18 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 # $Id$
 
+# Parameters for this port.
+set crossgcc-target arm-linux-gnueabi
+
 PortSystem          1.0
-name                arm-linux-gnueabi-ocaml-compiler
+name                ${crossgcc-target}-ocaml-compiler
 version             3.12.1
 set major-version   [join [lrange [split ${version} .] 0 1] .]
-revision            3
+revision            4
 categories          cross lang ml
 maintainers         googlemail.com:benedikt.meurer
 license             {QPL LGPL}
-description         OCaml arm-linux-gnueabi cross compiler.
+description         OCaml ${crossgcc-target} cross compiler.
 long_description    ${description}
 
 homepage            http://www.ocaml.org/
@@ -20,12 +23,9 @@ distname            ocaml-${version}
 worksrcdir          ocaml-${version}
 use_bzip2           yes
 universal_variant   no
-checksums           md5 227a3daaedb150bf5037a3db01f5bf42 \
-                    sha1 29b44117b116b1a5bc54a8b4514af483793a769f \
+checksums           md5    227a3daaedb150bf5037a3db01f5bf42 \
+                    sha1   29b44117b116b1a5bc54a8b4514af483793a769f \
                     rmd160 61d38c0785491c8790ac02ab78fb2f26ea490fc1
-
-# Parameters for this port.
-set crossgcc-target arm-linux-gnueabi
 
 depends_lib         bin:${crossgcc-target}-ar:${crossgcc-target}-binutils \
                     bin:${crossgcc-target}-as:${crossgcc-target}-binutils \
@@ -37,7 +37,8 @@ depends_run         bin:ocamlrun:ocaml \
 
 patch.pre_args      -p1
 patchfiles          patch-arm-add-type-directives-for-code-symbols.patch \
-                    patch-arm-cross-compile-nativeint.diff
+                    patch-arm-cross-compile-nativeint.diff \
+                    patch-i386-cross-compile-nativeint.diff
  
 # All cross ports violate the mtree layout
 destroot.violate_mtree  yes
@@ -53,18 +54,20 @@ configure.args      -no-curses \
 build.target        coldstart
 
 post-build {
-    # Now copy the ARM configuration
+    # Now copy the target configuration
     file copy -force \
         "${filespath}/Makefile" \
-        "${filespath}/m.h" \
         "${filespath}/s.h" \
         "${worksrcpath}/config"
+    file copy -force \
+        "${filespath}/${crossgcc-target}-m.h" \
+        "${worksrcpath}/config/m.h"
     reinplace "s|@prefix@|${prefix}|g" "${worksrcpath}/config/Makefile"
     reinplace "s|@target@|${crossgcc-target}|g" "${worksrcpath}/config/Makefile"
 
     # Now clean the temporary files from the previous build. This
-    # will also cause asmcomp/arch.ml (etc) to be linked to the ARM
-    # versions, essentially causing ocamlopt to use the ARM code
+    # will also cause asmcomp/arch.ml (etc) to be linked to the target
+    # versions, essentially causing ocamlopt to use the target code
     # generator.
     system -W "${worksrcpath}" "${build.cmd} partialclean"
 
@@ -83,14 +86,14 @@ destroot {
     file mkdir \
         "${destroot}${prefix}/etc"
     file copy \
-        "${filespath}/arm-linux-gnueabi-ocamlfind.conf.in" \
-        "${destroot}${prefix}/etc/arm-linux-gnueabi-ocamlfind.conf"
+        "${filespath}/ocamlfind.conf.in" \
+        "${destroot}${prefix}/etc/${crossgcc-target}-ocamlfind.conf"
     reinplace \
         "s|@prefix@|${prefix}|g" \
-        "${destroot}${prefix}/etc/arm-linux-gnueabi-ocamlfind.conf"
+        "${destroot}${prefix}/etc/${crossgcc-target}-ocamlfind.conf"
     reinplace \
         "s|@target@|${crossgcc-target}|g" \
-        "${destroot}${prefix}/etc/arm-linux-gnueabi-ocamlfind.conf"
+        "${destroot}${prefix}/etc/${crossgcc-target}-ocamlfind.conf"
 
     # Install the cross compiler and tools by copying
     file mkdir \
