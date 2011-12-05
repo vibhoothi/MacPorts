@@ -1,0 +1,88 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+# Parameters for this port
+set crossgcc-target i486-linux-gnu
+set debian-arch     i386
+set findlib-version 1.2.7+debian-1+b1
+set ocaml-version   3.12.1-2
+set ounit-version   1.1.0-3+b2
+
+PortSystem          1.0
+name                ${crossgcc-target}-ocaml-runtime
+version             3.12.1
+categories          cross lang
+maintainers         googlemail.com:benedikt.meurer
+license             {LGPL QPL}
+description         Debian ${debian-arch} OCaml runtime files.
+long_description    ${description}
+
+homepage            http://www.debian.org/
+platforms           darwin
+supported_archs     noarch
+master_sites        debian:f/findlib/:findlib \
+                    debian:o/ocaml/:ocaml \
+                    debian:o/ounit/:ounit
+distfiles           libfindlib-ocaml-dev_${findlib-version}_${debian-arch}.deb:findlib \
+                    libfindlib-ocaml_${findlib-version}_${debian-arch}.deb:findlib \
+                    ocaml-base-nox_${ocaml-version}_${debian-arch}.deb:ocaml \
+                    ocaml-nox_${ocaml-version}_${debian-arch}.deb:ocaml \
+                    libounit-ocaml-dev_${ounit-version}_${debian-arch}.deb:ounit
+worksrcdir          ${name}-${version}
+checksums           libfindlib-ocaml-dev_${findlib-version}_${debian-arch}.deb \
+                        md5     ddcf073677814e9950ad861540121681 \
+                        sha1    89bfffc8feccacb990fce49d478f1d2cd93595d1 \
+                        rmd160  ddee475cfc05300d7ce87eb02d1eaca361fd792e \
+                    libfindlib-ocaml_${findlib-version}_${debian-arch}.deb \
+                        md5     34af22b7ffc85b7a6165c52ffa6d1e24 \
+                        sha1    3272e0983f5a37aa496e86d110be6a12d86ef535 \
+                        rmd160  2320d9468d53eba55587c8e48299e9d989ca8725 \
+                    ocaml-base-nox_${ocaml-version}_${debian-arch}.deb \
+                        md5     11b2364892de536611d852c7ebc904c2 \
+                        sha1    e74af0f616891c65623594bc901542f73e63f707 \
+                        rmd160  f63f136b6781128f25aff01e2c291e6a56167df4 \
+                    ocaml-nox_${ocaml-version}_${debian-arch}.deb \
+                        md5     46641d47a9dd26120bc563aae78bce1f \
+                        sha1    b44974d023a561c5e13753d136d7d894a7b7b39f \
+                        rmd160  da93b5c8c3342f36e966d0a6dc14fd714de0d159 \
+                    libounit-ocaml-dev_${ounit-version}_${debian-arch}.deb \
+                        md5     6bcad33fd5ef3d8845e0723213280932 \
+                        sha1    448734d611aa4af4ef736a4432892d9e281209d2 \
+                        rmd160  fdbbdb81410123a39be9ea87eb721da0b0f36835
+
+depends_extract     bin:dpkg:dpkg
+depends_run         port:${crossgcc-target}-runtime
+
+
+# All cross ports violate the mtree layout
+destroot.violate_mtree  yes
+
+extract.suffix      .deb
+extract.cmd         dpkg
+extract.pre_args    -x
+extract.post_args   ${worksrcpath}
+use_configure       no
+build {
+    # Fix absolute symbolic links
+    foreach f [glob -directory "${worksrcpath}" -types l "*" "*/*" "*/*/*" "*/*/*/*"] {
+        set t [file readlink "$f"]
+        if [string equal -length 1 "$t" "/"] {
+            system "ln -fs '${prefix}/${crossgcc-target}/sysroot$t' $f"
+        }
+    }
+}
+destroot {
+    # Install files by copying them
+    xinstall -d "${destroot}${prefix}/${crossgcc-target}"
+    file copy "${worksrcpath}" "${destroot}${prefix}/${crossgcc-target}/sysroot"
+
+    # Install native dynlink files for armel
+    if {${debian-arch} == "armel"} {
+        foreach f [list "dynlink.a" "dynlink.cmx" "dynlink.cmxa"] {
+            file copy -force "${filespath}/$f" \
+                "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml"
+        }
+        file copy -force "${filespath}/META.dynlink" \
+            "${destroot}${prefix}/${crossgcc-target}/sysroot/usr/lib/ocaml/METAS"
+    }
+}
