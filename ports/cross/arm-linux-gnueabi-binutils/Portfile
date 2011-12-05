@@ -1,15 +1,19 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 # $Id$
 
+# Parameters for this port.
+set crossgcc-target arm-linux-gnueabi
+
 PortSystem          1.0
-name                arm-linux-gnueabi-binutils
+name                ${crossgcc-target}-binutils
 version             2.22
+revision            1
 categories          cross devel
 maintainers         googlemail.com:benedikt.meurer
 license             GPL-3+
-description         FSF Binutils for arm-linux-gnueabi cross development
+description         FSF Binutils for ${crossgcc-target} cross development
 long_description    Free Software Foundation development toolchain ("binutils") for \
-                    arm-linux-gnueabi cross development.
+                    ${crossgcc-target} cross development.
 
 homepage            http://www.gnu.org/software/binutils/binutils.html
 platforms           darwin
@@ -21,9 +25,6 @@ universal_variant   no
 checksums           md5     ee0f10756c84979622b992a4a61ea3f5 \
                     sha1    65b304a0b9a53a686ce50a01173d1f40f8efe404 \
                     rmd160  34cebe4cdca9480d5dc6f6b00b052c48c8ac30dc
-
-# Parameters for this port.
-set crossgcc-target arm-linux-gnueabi
 
 depends_lib-append  port:zlib
 
@@ -68,7 +69,7 @@ configure.args      --infodir='${prefix}/share/info' \
                     --program-prefix=${crossgcc-target}- \
                     --target=${crossgcc-target} \
                     --with-float=soft \
-                    --with-pkgversion='MacPorts 2011/12/02' \
+                    --with-pkgversion='MacPorts for ${crossgcc-target}' \
                     --with-sysroot='${prefix}/${crossgcc-target}/sysroot' \
                     --disable-multilib \
                     --disable-nls \
