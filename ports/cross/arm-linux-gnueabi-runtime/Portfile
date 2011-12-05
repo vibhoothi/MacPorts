@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 name                arm-linux-gnueabi-runtime
-version             20111202
+version             20111205
 categories          cross devel
 maintainers         googlemail.com:benedikt.meurer
 license             LGPL-2+
@@ -12,6 +12,7 @@ long_description    ${description}
 
 # Parameters for this port
 set crossgcc-target arm-linux-gnueabi
+set debian-arch armel
 set binutils-version 2.22-1
 set eglibc-version 2.11.2-10
 set gdbm-version 1.8.3-9
@@ -28,64 +29,64 @@ master_sites        debian:b/binutils/:binutils \
                     debian:l/linux-2.6/:linux \
                     debian:n/ncurses/:ncurses \
                     debian:z/zlib/:zlib
-distfiles           binutils-dev_${binutils-version}_armel.deb:binutils \
-                    libc6-dev_${eglibc-version}_armel.deb:eglibc \
-                    libc6-pic_${eglibc-version}_armel.deb:eglibc \
-                    libc6_${eglibc-version}_armel.deb:eglibc \
-                    libgdbm-dev_${gdbm-version}_armel.deb:gdbm \
-                    libgdbm3_${gdbm-version}_armel.deb:gdbm \
-                    linux-libc-dev_${linux-version}_armel.deb:linux \
-                    libncurses5-dev_${ncurses-version}_armel.deb:ncurses \
-                    libtinfo-dev_${ncurses-version}_armel.deb:ncurses \
-                    libtinfo5_${ncurses-version}_armel.deb:ncurses \
-                    zlib1g-dev_${zlib-version}_armel.deb:zlib \
-                    zlib1g_${zlib-version}_armel.deb:zlib
+distfiles           binutils-dev_${binutils-version}_${debian-arch}.deb:binutils \
+                    libc6-dev_${eglibc-version}_${debian-arch}.deb:eglibc \
+                    libc6-pic_${eglibc-version}_${debian-arch}.deb:eglibc \
+                    libc6_${eglibc-version}_${debian-arch}.deb:eglibc \
+                    libgdbm-dev_${gdbm-version}_${debian-arch}.deb:gdbm \
+                    libgdbm3_${gdbm-version}_${debian-arch}.deb:gdbm \
+                    linux-libc-dev_${linux-version}_${debian-arch}.deb:linux \
+                    libncurses5-dev_${ncurses-version}_${debian-arch}.deb:ncurses \
+                    libtinfo-dev_${ncurses-version}_${debian-arch}.deb:ncurses \
+                    libtinfo5_${ncurses-version}_${debian-arch}.deb:ncurses \
+                    zlib1g-dev_${zlib-version}_${debian-arch}.deb:zlib \
+                    zlib1g_${zlib-version}_${debian-arch}.deb:zlib
 worksrcdir          ${name}-${version}
-checksums           binutils-dev_${binutils-version}_armel.deb \
+checksums           binutils-dev_${binutils-version}_${debian-arch}.deb \
                         md5     e82f7ca55d3c4bb3f491f16d76e0d61f \
                         sha1    75cf847f2b0dbae90f72d7d94fb31f636af4fe08 \
                         rmd160  9ef3d0ac4e2f2e40b5a0cd0cff7bc3bb3bc41326 \
-                    libc6-dev_${eglibc-version}_armel.deb \
+                    libc6-dev_${eglibc-version}_${debian-arch}.deb \
                         md5 5ddc618d996fe28753cd8cec153dcc65 \
                         sha1 7a040bea49d2e34599d2326e05e2c67ef8ed7557 \
                         rmd160 2af012bc72ba079d426d05de4ff47d18ba2afda3 \
-                    libc6-pic_${eglibc-version}_armel.deb \
+                    libc6-pic_${eglibc-version}_${debian-arch}.deb \
                         md5 a183e19270dbba04d9b169cd282f3fa5 \
                         sha1 aeac70a52fef831ea91b5061de9082f52cb6cf30 \
                         rmd160 40f2819b53f83b799a9dc003f487017bc404e6c6 \
-                    libc6_${eglibc-version}_armel.deb \
+                    libc6_${eglibc-version}_${debian-arch}.deb \
                         md5 c5fd3c1161dba7978cdadd745b3e98e4 \
                         sha1 96e09d56d022d8fa64c31bf03e1a204f61bb2a25 \
                         rmd160 6e6cf474ebacc38e4be3afcca92e9d4f9b4be769 \
-                    libgdbm-dev_${gdbm-version}_armel.deb \
+                    libgdbm-dev_${gdbm-version}_${debian-arch}.deb \
                         md5 79585c76c8446d5062ae13e688959b1f \
                         sha1 edd9b223ca5c6ceb0ff56092997cf8f25f747b1a \
                         rmd160 272f0497765872653dd4405125c02f4baf1db80d \
-                    libgdbm3_${gdbm-version}_armel.deb \
+                    libgdbm3_${gdbm-version}_${debian-arch}.deb \
                         md5 9481406b698902d53e6c9d6c92d60349 \
                         sha1 5ce5d7ecb4d54804c176fc9c931ec25fd707cb70 \
                         rmd160 3d62e6e9d8a9a8dc9a079464965f13da7a5bec47 \
-                    linux-libc-dev_${linux-version}_armel.deb \
+                    linux-libc-dev_${linux-version}_${debian-arch}.deb \
                         md5 9fc0ba169bebb3b29e126ea60ea8eef5 \
                         sha1 e237ef2b4ce52532e904f0e4e0e5e33935b6573d \
                         rmd160 471de048c66afefb2a87c7dcb3183bf821368495 \
-                    libncurses5-dev_${ncurses-version}_armel.deb \
+                    libncurses5-dev_${ncurses-version}_${debian-arch}.deb \
                         md5 1168b0ccd8419ddc8e292c1d1925e428 \
                         sha1 ce7632457ab8d1e1b3d896e0f1b3ba7563ed55b2 \
                         rmd160 f87fe701deaa4a7c5efaec1e49f085f8de35cbeb \
-                    libtinfo-dev_${ncurses-version}_armel.deb \
+                    libtinfo-dev_${ncurses-version}_${debian-arch}.deb \
                         md5 fa6570722f87f3b336908b6522e83d66 \
                         sha1 15cb3b4f2a83faeeaa77164d0153d8ae6d6c4891 \
                         rmd160 25557ae6dc8c65d978ba8eb260f34eafd0723226 \
-                    libtinfo5_${ncurses-version}_armel.deb \
+                    libtinfo5_${ncurses-version}_${debian-arch}.deb \
                         md5 40abaa95ee60e22967b2ce46443b9e90 \
                         sha1 f3693e22020f111049fb2019f21ed014db46513f \
                         rmd160 7ca904084a54d8f08250ce113450b4bf82132712 \
-                    zlib1g-dev_${zlib-version}_armel.deb \
+                    zlib1g-dev_${zlib-version}_${debian-arch}.deb \
                         md5 88f411fcaea45350f1347af29aaee497 \
                         sha1 acb3725ea56df9cf11741255829deece279ed60e \
                         rmd160 65c261f68a44b27b6bf2c9326f6e41f8ee795bc3 \
-                    zlib1g_${zlib-version}_armel.deb \
+                    zlib1g_${zlib-version}_${debian-arch}.deb \
                         md5 bef2867f57394ba5fe902c56089330e9 \
                         sha1 b1f40b57f2a15368e84ce7107f2a782e886e5447 \
                         rmd160 e0a05a9a3d4e07c32a12e7de6ccb9c9026aee19e
