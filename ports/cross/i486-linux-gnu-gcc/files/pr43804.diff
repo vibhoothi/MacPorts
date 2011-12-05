@@ -1,0 +1,22 @@
+# DP: Fix for PR target/43804 backported from SVN
+
+2011-04-24  Richard Sandiford  <richard.sandiford@linaro.org>
+
+	PR target/43804
+	* config/m68k/constraints.md (T): Allow PIC operands that satisfy
+	LEGITIMATE_PIC_OPERAND_P.
+
+Index: gcc/config/m68k/constraints.md
+===================================================================
+--- a/src/gcc/config/m68k/constraints.md	(revision 172919)
++++ b/src/gcc/config/m68k/constraints.md	(revision 172920)
+@@ -94,7 +94,8 @@
+ (define_constraint "T"
+   "Used for operands that satisfy 's' when -mpcrel is not in effect."
+   (and (match_code "symbol_ref,label_ref,const")
+-       (match_test "!flag_pic")))
++       (match_test "!TARGET_PCREL")
++       (match_test "!flag_pic || LEGITIMATE_PIC_OPERAND_P (op)")))
+ 
+ (define_memory_constraint "Q"
+   "Means address register indirect addressing mode."

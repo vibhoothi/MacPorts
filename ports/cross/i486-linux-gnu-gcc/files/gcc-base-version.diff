@@ -1,0 +1,152 @@
+# DP: Set base version to 4.6, introduce full version 4.6.x.
+
+--- a/src/gcc/BASE-VER
++++ b/src/gcc/BASE-VER
+@@ -1 +1 @@
+-4.6.2
++4.6
+--- a/src/gcc/FULL-VER
++++ b/src/gcc/FULL-VER
+@@ -0,0 +1 @@
++4.6.2
+--- a/src/gcc/Makefile.in
++++ b/src/gcc/Makefile.in
+@@ -834,11 +834,13 @@
+ TM_H      = $(GTM_H) insn-flags.h $(OPTIONS_H)
+ 
+ # Variables for version information.
+-BASEVER     := $(srcdir)/BASE-VER  # 4.x.y
++FULLVER     := $(srcdir)/FULL-VER  # 4.x.y
++BASEVER     := $(srcdir)/BASE-VER  # 4.x
+ DEVPHASE    := $(srcdir)/DEV-PHASE # experimental, prerelease, ""
+ DATESTAMP   := $(srcdir)/DATESTAMP # YYYYMMDD or empty
+ REVISION    := $(srcdir)/REVISION  # [BRANCH revision XXXXXX]
+ 
++FULLVER_c   := $(shell cat $(FULLVER))
+ BASEVER_c   := $(shell cat $(BASEVER))
+ DEVPHASE_c  := $(shell cat $(DEVPHASE))
+ DATESTAMP_c := $(shell cat $(DATESTAMP))
+@@ -857,7 +859,7 @@
+ # development phase collapsed to the empty string in release mode
+ # (i.e. if DEVPHASE_c is empty).  The space immediately after the
+ # comma in the $(if ...) constructs is significant - do not remove it.
+-BASEVER_s   := "\"$(BASEVER_c)\""
++FULLVER_s   := "\"$(FULLVER_c)\""
+ DEVPHASE_s  := "\"$(if $(DEVPHASE_c), ($(DEVPHASE_c)))\""
+ DATESTAMP_s := "\"$(if $(DEVPHASE_c), $(DATESTAMP_c))\""
+ PKGVERSION_s:= "\"@PKGVERSION@\""
+@@ -2187,9 +2189,9 @@
+ 		$(MACHMODE_H)
+ 
+ prefix.o: prefix.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) prefix.h \
+-	Makefile $(BASEVER)
++	Makefile $(FULLVER)
+ 	$(COMPILER) $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) \
+-	-DPREFIX=\"$(prefix)\" -DBASEVER=$(BASEVER_s) \
++	-DPREFIX=\"$(prefix)\" -DBASEVER=$(FULLVER_s) \
+ 	  -c $(srcdir)/prefix.c $(OUTPUT_OPTION)
+ 
+ # Language-independent files.
+@@ -2260,9 +2262,9 @@
+ 
+ dumpvers: dumpvers.c
+ 
+-version.o: version.c version.h $(REVISION) $(DATESTAMP) $(BASEVER) $(DEVPHASE)
++version.o: version.c version.h $(REVISION) $(DATESTAMP) $(FULLVER) $(DEVPHASE)
+ 	$(COMPILER) $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) \
+-	-DBASEVER=$(BASEVER_s) -DDATESTAMP=$(DATESTAMP_s) \
++	-DBASEVER=$(FULLVER_s) -DDATESTAMP=$(DATESTAMP_s) \
+ 	-DREVISION=$(REVISION_s) \
+ 	-DDEVPHASE=$(DEVPHASE_s) -DPKGVERSION=$(PKGVERSION_s) \
+ 	-DBUGURL=$(BUGURL_s) -c $(srcdir)/version.c $(OUTPUT_OPTION)
+@@ -2801,10 +2803,10 @@
+    tree-ssa-alias.h $(TREE_FLOW_H)
+ 
+ bversion.h: s-bversion; @true
+-s-bversion: BASE-VER
+-	echo "#define BUILDING_GCC_MAJOR `echo $(BASEVER_c) | sed -e 's/^\([0-9]*\).*$$/\1/'`" > bversion.h
+-	echo "#define BUILDING_GCC_MINOR `echo $(BASEVER_c) | sed -e 's/^[0-9]*\.\([0-9]*\).*$$/\1/'`" >> bversion.h
+-	echo "#define BUILDING_GCC_PATCHLEVEL `echo $(BASEVER_c) | sed -e 's/^[0-9]*\.[0-9]*\.\([0-9]*\)$$/\1/'`" >> bversion.h
++s-bversion: FULL-VER
++	echo "#define BUILDING_GCC_MAJOR `echo $(FULLVER_c) | sed -e 's/^\([0-9]*\).*$$/\1/'`" > bversion.h
++	echo "#define BUILDING_GCC_MINOR `echo $(FULLVER_c) | sed -e 's/^[0-9]*\.\([0-9]*\).*$$/\1/'`" >> bversion.h
++	echo "#define BUILDING_GCC_PATCHLEVEL `echo $(FULLVER_c) | sed -e 's/^[0-9]*\.[0-9]*\.\([0-9]*\)$$/\1/'`" >> bversion.h
+ 	echo "#define BUILDING_GCC_VERSION (BUILDING_GCC_MAJOR * 1000 + BUILDING_GCC_MINOR)" >> bversion.h
+ 	$(STAMP) s-bversion
+ 
+@@ -3805,9 +3807,9 @@
+ ## build/version.o is compiled by the $(COMPILER_FOR_BUILD) but needs
+ ## several C macro definitions, just like version.o
+ build/version.o:  version.c version.h \
+-                  $(REVISION) $(DATESTAMP) $(BASEVER) $(DEVPHASE)
++                  $(REVISION) $(DATESTAMP) $(FULLVER) $(DEVPHASE)
+ 	$(COMPILER_FOR_BUILD) -c $(BUILD_COMPILERFLAGS) $(BUILD_CPPFLAGS) \
+-	-DBASEVER=$(BASEVER_s) -DDATESTAMP=$(DATESTAMP_s) \
++	-DBASEVER=$(FULLVER_s) -DDATESTAMP=$(DATESTAMP_s) \
+ 	-DREVISION=$(REVISION_s) \
+ 	-DDEVPHASE=$(DEVPHASE_s) -DPKGVERSION=$(PKGVERSION_s) \
+ 	-DBUGURL=$(BUGURL_s) -o $@ $<
+@@ -3968,7 +3970,7 @@
+ cppbuiltin.o: cppbuiltin.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
+ 	cppbuiltin.h Makefile
+ 	$(COMPILER) $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) \
+-	  $(PREPROCESSOR_DEFINES) -DBASEVER=$(BASEVER_s) \
++	  $(PREPROCESSOR_DEFINES) -DBASEVER=$(FULLVER_s) \
+ 	  -c $(srcdir)/cppbuiltin.c $(OUTPUT_OPTION)
+ 
+ cppdefault.o: cppdefault.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
+@@ -3989,8 +3991,8 @@
+ 		build/gcov-iov.o -o $@
+ 
+ gcov-iov.h: s-iov
+-s-iov: build/gcov-iov$(build_exeext) $(BASEVER) $(DEVPHASE)
+-	build/gcov-iov$(build_exeext) '$(BASEVER_c)' '$(DEVPHASE_c)' \
++s-iov: build/gcov-iov$(build_exeext) $(FULLVER) $(DEVPHASE)
++	build/gcov-iov$(build_exeext) '$(FULLVER_c)' '$(DEVPHASE_c)' \
+ 	    > tmp-gcov-iov.h
+ 	$(SHELL) $(srcdir)/../move-if-change tmp-gcov-iov.h gcov-iov.h
+ 	$(STAMP) s-iov
+@@ -4214,8 +4216,8 @@
+ TEXI_CPPINT_FILES = cppinternals.texi gcc-common.texi gcc-vers.texi
+ 
+ # gcc-vers.texi is generated from the version files.
+-gcc-vers.texi: $(BASEVER) $(DEVPHASE)
+-	(echo "@set version-GCC $(BASEVER_c)"; \
++gcc-vers.texi: $(FULLVER) $(DEVPHASE)
++	(echo "@set version-GCC $(FULLVER_c)"; \
+ 	 if [ "$(DEVPHASE_c)" = "experimental" ]; \
+ 	 then echo "@set DEVELOPMENT"; \
+ 	 else echo "@clear DEVELOPMENT"; \
+--- a/src/libjava/Makefile.am
++++ b/src/libjava/Makefile.am
+@@ -775,7 +775,7 @@
+ install-data-local:
+ 	$(PRE_INSTALL)
+ ## Install the .pc file.
+-	@pc_version=`echo $(GCJVERSION) | sed -e 's/[.][^.]*$$//'`; \
++	@pc_version=$(GCJVERSION); \
+ 	file="libgcj-$${pc_version}.pc"; \
+ 	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir); \
+ 	echo "  $(INSTALL_DATA) libgcj.pc $(DESTDIR)$(pkgconfigdir)/$$file"; \
+--- a/src/libjava/Makefile.in
++++ b/src/libjava/Makefile.in
+@@ -12412,7 +12412,7 @@
+ @BUILD_ECJ1_TRUE@	mv $(DESTDIR)$(libexecsubdir)/`echo ecjx | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'` $(DESTDIR)$(libexecsubdir)/ecj1$(host_exeext)
+ install-data-local:
+ 	$(PRE_INSTALL)
+-	@pc_version=`echo $(GCJVERSION) | sed -e 's/[.][^.]*$$//'`; \
++	@pc_version=$(GCJVERSION); \
+ 	file="libgcj-$${pc_version}.pc"; \
+ 	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir); \
+ 	echo "  $(INSTALL_DATA) libgcj.pc $(DESTDIR)$(pkgconfigdir)/$$file"; \
+--- a/src/libgcc/Makefile.in
++++ b/src/libgcc/Makefile.in
+@@ -201,7 +201,7 @@
+ export toolexecdir
+ export toolexeclibdir
+ 
+-version := $(shell $(CC) -dumpversion)
++version := $(shell cat $(srcdir)/../gcc/BASE-VER)
+ 
+ ifeq ($(decimal_float),yes)
+ ifeq ($(enable_decimal_float),bid)

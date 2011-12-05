@@ -1,0 +1,177 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+# Parameters for this port.
+set crossgcc-target i486-linux-gnu
+set crossgcc-flags  [list --with-arch=i486]
+
+PortSystem          1.0
+name                ${crossgcc-target}-gcc
+version             4.6.2
+categories          cross lang
+maintainers         googlemail.com:benedikt.meurer
+license             {GPL-3+ Permissive}
+description         The GNU Compiler Collection for ${crossgcc-target}.
+long_description    ${description}
+
+homepage            http://gcc.gnu.org/
+platforms           darwin
+master_sites        gnu:gcc/gcc-${version}
+distfiles           gcc-${version}.tar.bz2
+use_bzip2           yes
+universal_variant   no
+checksums           md5    028115c4fbfb6cfd75d6369f4a90d87e \
+                    sha1   691974613b1c1f15ed0182ec539fa54a12dd6f93 \
+                    rmd160 e7041933b39629f9524848dcf81a1a4c02a225c6
+worksrcdir          gcc-${version}
+
+depends_lib         bin:${crossgcc-target}-ar:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-as:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-ld:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-nm:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-objdump:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-ranlib:${crossgcc-target}-binutils \
+                    bin:${crossgcc-target}-strip:${crossgcc-target}-binutils \
+                    port:${crossgcc-target}-runtime \
+                    port:gmp \
+                    port:libiconv \
+                    port:libmpc \
+                    port:mpfr
+
+patchfiles          gcc-gfdl-build.diff \
+                    gcc-textdomain.diff \
+                    gcc-driver-extra-langs.diff \
+                    gcc-hash-style-both.diff \
+                    libstdc++-pic.diff \
+                    libstdc++-doclink.diff \
+                    libstdc++-man-3cxx.diff \
+                    libstdc++-test-installed.diff \
+                    libjava-stacktrace.diff \
+                    libjava-jnipath.diff \
+                    libjava-sjlj.diff \
+                    libjava-disable-plugin.diff \
+                    alpha-no-ev4-directive.diff \
+                    boehm-gc-getnprocs.diff \
+                    note-gnu-stack.diff \
+                    libgomp-omp_h-multilib.diff \
+                    sparc-force-cpu.diff \
+                    pr24619.diff \
+                    gccgo-version.diff \
+                    no_fpr_in_libgcc.diff \
+                    pr48226.diff \
+                    pr47487.diff \
+                    mudflap-varargs.diff \
+                    pr45078.diff \
+                    pr43804.diff \
+                    pr49756.diff \
+                    pr49940.diff \
+                    pr49944.diff \
+                    gcc-cloog-dl.diff \
+                    libffi-kfreebsd.diff \
+                    gcc-base-version.diff \
+                    pr49696.diff \
+                    libffi-powerpc-sf.diff \
+                    libffi-powerpc-sysv-without-string-ops.diff \
+                    arm-dynamic-linker.diff \
+                    libjava-armel-unwind.diff \
+                    01-arm-64bitintrinsics-v2.diff \
+                    03-arm-pr48126-syncpos-v2.diff \
+                    04-arm-dmbmcr.diff \
+                    arm-multilib-soft-float.diff \
+                    libjava-disable-static.diff \
+                    s390-biarch.diff \
+                    mips-triarch.diff \
+                    cross-include.diff \
+                    cross-fixes.diff \
+                    gcc-ice-hack.diff \
+                    gcc-ice-apport.diff \
+                    libjava-fixed-symlinks.diff \
+                    libstdc++-arm-wno-abi.diff \
+                    libstdc++-no-testsuite.diff \
+                    ada-mips.diff \
+                    libffi-ro-eh_frame_sect.diff \
+                    libjava-nobiarch-check.diff \
+                    config-ml.diff \
+                    gcc-system-root.diff \
+                    libgomp-kfreebsd-testsuite.diff \
+                    armhf-triplet.diff
+patch.pre_args      -p2
+
+# All cross ports violate the mtree layout
+destroot.violate_mtree  yes
+
+# Download everything to gcc/
+dist_subdir         gcc
+
+# Since we don't build gcc and binutils at the same time, gcc's Makefile will try to transform
+# program names as gcc's name (add -${version} with ${version} being the version of gcc).
+# But it won't work because binutils binaries don't have the ${version} suffix, and even if they
+# had, they would actually have the binutils' version suffix (and not gcc's version).
+# So let's tell gcc's Makefile not to do that mistake.
+set environment     [list AR_FOR_TARGET=${crossgcc-target}-ar \
+                     AS_FOR_TARGET=${crossgcc-target}-as \
+                     LD_FOR_TARGET=${crossgcc-target}-ld \
+                     NM_FOR_TARGET=${crossgcc-target}-nm \
+                     OBJDUMP_FOR_TARGET=${crossgcc-target}-objdump \
+                     RANLIB_FOR_TARGET=${crossgcc-target}-ranlib \
+                     STRIP_FOR_TARGET=${crossgcc-target}-strip]
+
+# Build in a different directory, as advised in the README file.
+pre-configure {
+    file mkdir "${workpath}/build"
+}
+# the generated compiler doesn't accept -arch
+configure.cc_archflags
+configure.cxx_archflags
+configure.objc_archflags
+configure.ld_archflags
+configure.compiler  gcc-4.2
+configure.dir       ${workpath}/build
+configure.cmd       ${worksrcpath}/configure
+configure.env       ${environment}
+configure.args      --infodir='${prefix}/share/info' \
+                    --mandir='${prefix}/share/man' \
+                    --program-prefix=${crossgcc-target}- \
+                    --target=${crossgcc-target} \
+                    --with-gmp='${prefix}' \
+                    --with-local-prefix='${prefix}/${crossgcc-target}/sysroot' \
+                    --with-mpc='${prefix}' \
+                    --with-mpfr='${prefix}' \
+                    --with-pkgversion='MacPorts for ${crossgcc-target}' \
+                    --with-sysroot='${prefix}/${crossgcc-target}/sysroot' \
+                    --with-system-zlib \
+                    --disable-checking \
+                    --disable-libgomp \
+                    --disable-libmudflap \
+                    --disable-libssp \
+                    --disable-libstdcxx-pch \
+                    --disable-nls \
+                    --enable-__cxa_atexit \
+                    --enable-c99 \
+                    --enable-languages='c' \
+                    --enable-long-long \
+                    --enable-shared \
+                    --enable-symvers=gnu \
+                    --enable-target-optspace \
+                    --enable-threads=posix \
+                    ${crossgcc-flags}
+if {${os.platform} == "darwin" && ($build_arch == "x86_64" || $build_arch == "ppc64")} {
+    configure.args-append   --build=${build_arch}-apple-darwin${os.version} \
+                            --host=${build_arch}-apple-darwin${os.version}
+}
+build.dir           ${workpath}/build
+
+post-destroot {
+	# FSF propaganda (should already be there or would conflict)
+	file delete -force "${destroot}${prefix}/share/info"
+	file delete -force "${destroot}${prefix}/share/man/man7"
+
+	# (host) libiberty
+	foreach f [glob -directory "${destroot}${prefix}/lib" libiberty.a */libiberty.a] {
+       file delete $f
+    }
+}
+
+livecheck.type  regex
+livecheck.url   http://gcc.gnu.org/gcc-4.4/
+livecheck.regex GCC (4\\.4\\.\[0-9\])

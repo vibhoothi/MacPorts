@@ -1,0 +1,18 @@
+        gcc/
+    	* config/arm/arm.c (TARGET_HAVE_DMB_MCR) MCR Not available in Thumb1
+    	  but is available on armv6
+
+diff --git a/src/gcc/config/arm/arm.h b/gcc/config/arm/arm.h
+index 0d419d5..146b9ad 100644
+--- a/src/gcc/config/arm/arm.h
++++ b/src/gcc/config/arm/arm.h
+@@ -285,7 +285,8 @@ extern void (*arm_lang_output_object_attributes_hook)(void);
+ #define TARGET_HAVE_DMB		(arm_arch7)
+ 
+ /* Nonzero if this chip implements a memory barrier via CP15.  */
+-#define TARGET_HAVE_DMB_MCR	(arm_arch6k && ! TARGET_HAVE_DMB)
++#define TARGET_HAVE_DMB_MCR	(arm_arch6 && ! TARGET_HAVE_DMB \
++				 && ! TARGET_THUMB1)
+ 
+ /* Nonzero if this chip implements a memory barrier instruction.  */
+ #define TARGET_HAVE_MEMORY_BARRIER (TARGET_HAVE_DMB || TARGET_HAVE_DMB_MCR)
