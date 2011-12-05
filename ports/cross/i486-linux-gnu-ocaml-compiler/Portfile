@@ -2,12 +2,15 @@
 # $Id$
 
 # Parameters for this port.
+set ocaml-arch i386
+set ocaml-system linux_elf
 set crossgcc-target i486-linux-gnu
 
 PortSystem          1.0
 name                ${crossgcc-target}-ocaml-compiler
 version             3.12.1
 set major-version   [join [lrange [split ${version} .] 0 1] .]
+revision            1
 categories          cross lang ml
 maintainers         googlemail.com:benedikt.meurer
 license             {QPL LGPL}
@@ -55,13 +58,15 @@ build.target        coldstart
 post-build {
     # Now copy the target configuration
     file copy -force \
+        "${filespath}/${crossgcc-target}-m.h" \
+        "${worksrcpath}/config/m.h"
+    file copy -force \
         "${filespath}/Makefile" \
         "${filespath}/s.h" \
         "${worksrcpath}/config"
-    file copy -force \
-        "${filespath}/${crossgcc-target}-m.h" \
-        "${worksrcpath}/config/m.h"
+    reinplace "s|@arch@|${ocaml-arch}|g" "${worksrcpath}/config/Makefile"
     reinplace "s|@prefix@|${prefix}|g" "${worksrcpath}/config/Makefile"
+    reinplace "s|@system@|${ocaml-system}|g" "${worksrcpath}/config/Makefile"
     reinplace "s|@target@|${crossgcc-target}|g" "${worksrcpath}/config/Makefile"
 
     # Now clean the temporary files from the previous build. This

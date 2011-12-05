@@ -34,9 +34,9 @@ SYSLIB=-l$(1)
 ### How to build a static library
 MKLIB=@target@-ar rc $(1) $(2); @target@-ranlib $(1)
 #ml let mklib out files opts = Printf.sprintf "@target@-ar rc %s %s %s; @target@-ranlib %s" out opts files out;;
-ARCH=arm
+ARCH=@arch@
 MODEL=default
-SYSTEM=linux
+SYSTEM=@system@
 NATIVECC=@target@-gcc
 NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64 -D_REENTRANT
 NATIVECCPROFOPTS=-Wall -D_FILE_OFFSET_BITS=64 -D_REENTRANT
