@@ -1,0 +1,95 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+# Parameters for this port.
+set crossgcc-target i486-linux-gnu
+
+PortSystem          1.0
+name                ${crossgcc-target}-binutils
+version             2.22
+categories          cross devel
+maintainers         googlemail.com:benedikt.meurer
+license             GPL-3+
+description         FSF Binutils for ${crossgcc-target} cross development
+long_description    Free Software Foundation development toolchain ("binutils") for \
+                    ${crossgcc-target} cross development.
+
+homepage            http://www.gnu.org/software/binutils/binutils.html
+platforms           darwin
+master_sites        gnu:binutils
+distname            binutils-${version}
+worksrcdir          binutils-${version}
+use_bzip2           yes
+universal_variant   no
+checksums           md5     ee0f10756c84979622b992a4a61ea3f5 \
+                    sha1    65b304a0b9a53a686ce50a01173d1f40f8efe404 \
+                    rmd160  34cebe4cdca9480d5dc6f6b00b052c48c8ac30dc
+
+depends_lib-append  port:zlib
+
+patchfiles          002_gprof_profile_arcs.patch \
+                    003_gprof_see_also_monitor.patch \
+                    006_better_file_error.patch \
+                    012_check_ldrunpath_length.patch \
+                    013_bash_in_ld_testsuite.patch \
+                    127_x86_64_i386_biarch.patch \
+                    128_build_id.patch \
+                    128_ppc64_powerpc_biarch.patch \
+                    129_ld_mulitarch_dirs.patch \
+                    130_gold_disable_testsuite_build.patch \
+                    131_ld_bootstrap_testsuite.patch \
+                    134_gold_no_spu.patch \
+                    135_bfd_version.patch \
+                    140_pr10340.patch \
+                    156_pr10144.patch \
+                    157_ar_scripts_with_tilde.patch \
+                    158_ld_system_root.patch \
+                    160_gas_pr12698.diff \
+                    161_gold_dummy_zoption.diff \
+                    162_fpic_s390x.diff \
+                    163_multiarch_search_path.patch \
+                    167_pr13302.diff
+patch.pre_args      -p1
+
+# All cross ports violate the mtree layout
+destroot.violate_mtree  yes
+
+# Download everything to binutils/
+dist_subdir         binutils
+
+# Build in a different directory, as advised in the README file.
+pre-configure {
+    file mkdir "${workpath}/build"
+}
+configure.dir       ${workpath}/build
+configure.cmd       ${worksrcpath}/configure
+configure.args      --infodir='${prefix}/share/info' \
+                    --mandir='${prefix}/share/man' \
+                    --program-prefix=${crossgcc-target}- \
+                    --target=${crossgcc-target} \
+                    --with-pkgversion='MacPorts for ${crossgcc-target}' \
+                    --with-sysroot='${prefix}/${crossgcc-target}/sysroot' \
+                    --disable-multilib \
+                    --disable-nls \
+                    --disable-werror
+if {${os.platform} == "darwin" && ($build_arch == "x86_64" || $build_arch == "ppc64")} {
+    configure.args-append   --build=${build_arch}-apple-darwin${os.version} \
+                            --host=${build_arch}-apple-darwin${os.version}
+}
+build.dir           ${workpath}/build
+
+# We don't want the etc module
+post-extract {
+    system "rm -rf ${worksrcpath}/etc"
+}
+
+post-destroot {
+    file delete -force "${destroot}${prefix}/share/info"
+    # Installing (host) libiberty was a mistake.
+    foreach f [glob -directory "${destroot}${prefix}/lib" libiberty.a */libiberty.a] {
+        file delete $f
+    }
+}
+
+livecheck.type      freshmeat
+livecheck.name      binutils

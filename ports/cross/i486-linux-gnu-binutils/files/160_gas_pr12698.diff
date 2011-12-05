@@ -1,0 +1,54 @@
+# DP: Proposed patch for PR gas/12698
+
+2011-04-15  Bernd Schmidt  <bernds@codesourcery.com>
+
+	gas/
+	* config/tc-arm.c (m_profile_p): New function.
+	(parse_psr, do_t_mrs, do_t_msr): Use m_profile_p.
+
+
+--- a/gas/config/tc-arm.c
++++ b/gas/config/tc-arm.c
+@@ -234,6 +234,15 @@
+ static const arm_feature_set fpu_neon_ext_fma = ARM_FEATURE (0, FPU_NEON_EXT_FMA);
+ static const arm_feature_set fpu_vfp_ext_fma = ARM_FEATURE (0, FPU_VFP_EXT_FMA);
+ 
++/* Return whether FEATURES indicates an M profile CPU, without getting
++   confused by ARM_ANY.  */
++static int
++m_profile_p (arm_feature_set features)
++{
++  return (ARM_CPU_HAS_FEATURE (features, arm_ext_v6m)
++	  && !ARM_CPU_HAS_FEATURE (features, arm_ext_v7a));
++}
++
+ static int mfloat_abi_opt = -1;
+ /* Record user cpu selection for object attributes.  */
+ static arm_feature_set selected_cpu = ARM_ARCH_NONE;
+@@ -5354,7 +5363,7 @@
+   const struct asm_psr *psr;
+   char *start;
+   bfd_boolean is_apsr = FALSE;
+-  bfd_boolean m_profile = ARM_CPU_HAS_FEATURE (selected_cpu, arm_ext_m);
++  bfd_boolean m_profile = m_profile_p (selected_cpu);
+ 
+   /* CPSR's and SPSR's can now be lowercase.  This is just a convenience
+      feature for ease of use and backwards compatibility.  */
+@@ -10947,7 +10956,7 @@
+     {
+       int flags = inst.operands[1].imm & (PSR_c|PSR_x|PSR_s|PSR_f|SPSR_BIT);
+ 
+-      if (ARM_CPU_HAS_FEATURE (selected_cpu, arm_ext_m))
++      if (m_profile_p (selected_cpu))
+ 	constraint (flags != 0, _("selected processor does not support "
+         	    "requested special purpose register"));
+       else
+@@ -10979,7 +10988,7 @@
+   else
+     flags = inst.operands[0].imm;
+ 
+-  if (ARM_CPU_HAS_FEATURE (selected_cpu, arm_ext_m))
++  if (m_profile_p (selected_cpu))
+     {
+       int bits = inst.operands[0].imm & (PSR_c|PSR_x|PSR_s|PSR_f|SPSR_BIT);
+ 

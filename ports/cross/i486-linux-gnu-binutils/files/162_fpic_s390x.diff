@@ -1,0 +1,31 @@
+# DP: Fix s390x build.
+
+2011-08-24  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* config/picflag.m4: use -FPIC on s390x.
+	* libiberty/configure: regenerate.
+
+--- binutils-2.21.53.20110823.orig/config/picflag.m4
++++ binutils-2.21.53.20110823/config/picflag.m4
+@@ -51,6 +51,9 @@
+     m68k-*-*)
+ 	$1=-fpic
+ 	;;
++    s390x*-*-*)
++	$1=-fPIC
++	;;
+     s390*-*-*)
+ 	$1=-fpic
+ 	;;
+--- binutils-2.21.53.20110823.orig/libiberty/configure
++++ binutils-2.21.53.20110823/libiberty/configure
+@@ -4891,6 +4891,9 @@
+     m68k-*-*)
+ 	PICFLAG=-fpic
+ 	;;
++    s390x*-*-*)
++	PICFLAG=-fPIC
++	;;
+     s390*-*-*)
+ 	PICFLAG=-fpic
+ 	;;
