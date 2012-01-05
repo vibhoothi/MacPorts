@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 PortGroup ocaml     1.0
-name                caml-oasis
+name                ocaml-oasis
 version             0.2.0
 categories          devel ml
 maintainers         googlemail.com:benedikt.meurer
@@ -24,13 +24,13 @@ checksums           md5     e5d04bfe41eacd4f58a156784700a2ba \
                     sha1    b492b0f58d5c2643d11a4b87450ffe4cd2b635d2 \
                     rmd160  5b7623e13c7c73948d2528dfea06dbe92b9b17a5
 
-depends_lib         port:caml-expect \
-                    port:caml-fileutils \
-                    port:caml-findlib \
-                    port:caml-graph \
-                    port:caml-ocamlify \
-                    port:caml-odn \
-                    port:caml-ounit
+depends_lib         port:ocaml-data-notation \
+                    port:ocaml-expect \
+                    port:ocaml-fileutils \
+                    port:ocaml-findlib \
+                    port:ocaml-ocamlgraph \
+                    port:ocaml-ounit \
+                    port:ocamlify
 
 livecheck.type      regex
 livecheck.url       http://forge.ocamlcore.org/frs/?group_id=54
