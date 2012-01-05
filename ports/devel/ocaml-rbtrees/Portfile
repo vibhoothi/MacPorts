@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 PortGroup ocaml     1.0
-name                caml-rbtrees
+name                ocaml-rbtrees
 version             0.1.0
 categories          devel ml
 maintainers         googlemail.com:benedikt.meurer
@@ -19,8 +19,6 @@ long_description    This is an implementation of Red-Black Trees for OCaml. \
 homepage            https://github.com/bmeurer/ocaml-rbtrees/
 platforms           darwin
 master_sites        https://github.com/downloads/bmeurer/ocaml-rbtrees/
-
-distname            ocaml-rbtrees-${version}
 
 checksums           md5     5babc634dfa4aa3be6e7599a007a5908 \
                     sha1    917464237cdeac3eec4c926b8c74aedd03553f52 \
