@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 PortGroup ocaml     1.0
-name                caml-ocamlnat
+name                ocamlnat
 version             0.1.1
 categories          lang ml
 maintainers         googlemail.com:benedikt.meurer
@@ -22,14 +22,12 @@ homepage            http://benediktmeurer.de/ocamlnat
 platforms           darwin
 master_sites        https://forge.ocamlcore.org/frs/download.php/725/
 
-distname            ocamlnat-${version}
-
 checksums           md5     c8e47d00255131c4d174d6993abde921 \
                     sha1    bfa76a874491e86c19989c2d82e905275206cbfd \
                     rmd160  5d50bfc7120fad7b8e83ab2fbdcc33251f0fcbd5
 
-depends_build       port:caml-ounit
-depends_lib         port:caml-findlib
+depends_build       port:ocaml-ounit
+depends_lib         port:ocaml-findlib
 
 livecheck.type      regex
 livecheck.url       http://forge.ocamlcore.org/frs/?group_id=277
