@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 PortGroup ocaml     1.0
-name                caml-expect
+name                ocaml-expect
 version             0.0.2
 categories          devel ml
 maintainers         googlemail.com:benedikt.meurer
@@ -20,15 +20,13 @@ homepage            http://forge.ocamlcore.org/projects/ocaml-expect/
 platforms           darwin
 master_sites        http://forge.ocamlcore.org/frs/download.php/475/
 
-distname            ocaml-expect-${version}
-
 checksums           md5     723288a1c9078f86e6185e78a6baa577 \
                     sha1    e61d48cdec55c8ab032ea88db371b6f77d0e5063 \
                     rmd160  fb6b6c41cbac7a30b6e6376b93bc31ab65bef2f0
 
-depends_lib         port:caml-extlib \
-                    port:caml-ounit \
-                    port:caml-pcre
+depends_lib         port:ocaml-extlib \
+                    port:ocaml-ounit \
+                    port:ocaml-pcre
 
 livecheck.type      regex
 livecheck.url       http://forge.ocamlcore.org/frs/?group_id=177
