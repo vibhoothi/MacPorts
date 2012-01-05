@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 PortGroup ocaml     1.0
-name                caml-fileutils
+name                ocaml-fileutils
 version             0.4.3
 categories          devel ml
 maintainers         googlemail.com:benedikt.meurer
@@ -17,8 +17,6 @@ long_description    ocaml-fileutils is a file manipulation library for OCaml. \
 homepage            http://forge.ocamlcore.org/projects/ocaml-fileutils/
 platforms           darwin
 master_sites        http://forge.ocamlcore.org/frs/download.php/625/
-
-distname            ocaml-fileutils-${version}
 
 checksums           md5     b2a3c8541a130d7c601a7deb5e982ef7 \
                     sha1    a2a7326565f8cf5d8cc11264b9612329579a9d46 \
