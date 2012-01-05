@@ -1,11 +1,10 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
-# $Id: Portfile 84075 2011-09-16 06:24:16Z mww@macports.org $
+# $Id: Portfile 88485 2012-01-03 11:01:15Z mww@macports.org $
 
 PortSystem 1.0
 
-name                caml-findlib
+name                ocaml-findlib
 version             1.2.7
-revision            1
 distname            findlib-${version}
 categories          devel ml
 maintainers         mww googlemail.com:benedikt.meurer
