@@ -3,7 +3,7 @@
 
 PortSystem          1.0
 PortGroup ocaml     1.0
-name                caml-odn
+name                ocaml-data-notation
 version             0.0.6
 categories          devel ml
 maintainers         googlemail.com:benedikt.meurer
@@ -17,13 +17,11 @@ homepage            http://forge.ocamlcore.org/projects/odn/
 platforms           darwin
 master_sites        https://forge.ocamlcore.org/frs/download.php/638/
 
-distname            ocaml-data-notation-${version}
-
 checksums           md5     32d916776f37c6439d52a0adf34da922 \
                     sha1    05428d7e260006e362764c118e60314223bcddaf \
                     rmd160  bd6d51e58b34de19c619f4db8f622caf32fd01d1
 
-depends_lib         port:caml-type-conv
+depends_lib         port:ocaml-type-conv
 
 livecheck.type      regex
 livecheck.url       http://forge.ocamlcore.org/frs/?group_id=148
