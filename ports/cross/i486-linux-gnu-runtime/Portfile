@@ -13,7 +13,7 @@ set zlib-version 1.2.3.4.dfsg-3
 
 PortSystem          1.0
 name                ${crossgcc-target}-runtime
-version             20111205
+version             20120116
 categories          cross devel
 maintainers         googlemail.com:benedikt.meurer
 license             LGPL-2+
