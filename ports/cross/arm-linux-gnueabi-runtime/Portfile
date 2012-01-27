@@ -4,7 +4,7 @@
 # Parameters for this port
 set crossgcc-target arm-linux-gnueabi
 set debian-arch armel
-set binutils-version 2.22-2
+set binutils-version 2.22-4
 set eglibc-version 2.11.2-10
 set gdbm-version 1.8.3-9
 set linux-version 2.6.32-39
@@ -43,9 +43,9 @@ distfiles           binutils-dev_${binutils-version}_${debian-arch}.deb:binutils
                     zlib1g_${zlib-version}_${debian-arch}.deb:zlib
 worksrcdir          ${name}-${version}
 checksums           binutils-dev_${binutils-version}_${debian-arch}.deb \
-                        md5    6e50d92e66b668ac4e3e7c617b8efc79 \
-                        sha1   c959326a1c285b1711d70e38ea1c47b719eb01e7 \
-                        rmd160 ddefbddcb0b22a227be05909124be9d0403e526a \
+                        md5    d50431d4038f5c7f9b3f40d97310215d \
+                        sha1   eaf80324d3190f38da2c36cdf7bd232d747149cf \
+                        rmd160 df91bd7962c0715dfcab3d58bf51d0d654996843 \
                     libc6-dev_${eglibc-version}_${debian-arch}.deb \
                         md5 5ddc618d996fe28753cd8cec153dcc65 \
                         sha1 7a040bea49d2e34599d2326e05e2c67ef8ed7557 \
