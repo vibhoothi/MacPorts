@@ -4,7 +4,7 @@
 # Parameters for this port
 set crossgcc-target i486-linux-gnu
 set debian-arch i386
-set binutils-version 2.22-2
+set binutils-version 2.22-4
 set eglibc-version 2.11.2-10
 set gdbm-version 1.8.3-9
 set linux-version 2.6.32-39
@@ -43,9 +43,9 @@ distfiles           binutils-dev_${binutils-version}_${debian-arch}.deb:binutils
                     zlib1g_${zlib-version}_${debian-arch}.deb:zlib
 worksrcdir          ${name}-${version}
 checksums           binutils-dev_${binutils-version}_${debian-arch}.deb \
-                        md5    f8a02644b78a4b11bdcb649e6757661d \
-                        sha1   b73e577ca82bd3afdd57c6c2cec95c8105c6dd2f \
-                        rmd160 95cb479363ee7df2326e790bfe3a67b9a368cdc2 \
+                        md5    f6471b78821337df54691098d9209ec4 \
+                        sha1   921c8cdef0a19277b2ddf8dddf014a1afee348f3 \
+                        rmd160 bd67a9f0968a8257b1c37aec66d9c83b194addb0 \
                     libc6-dev_${eglibc-version}_${debian-arch}.deb \
                         md5    8d53fe73c5c16bd40bed500d0e7b1aeb \
                         sha1   da450edb6bd45838128135510542c2c6cbb367b6 \
