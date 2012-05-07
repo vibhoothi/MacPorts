@@ -4,7 +4,7 @@
 PortSystem		1.0
 name			i386-mingw32-runtime
 version			3.20
-maintainers		landonf
+maintainers		googlemail.com:benedikt.meurer landonf
 description		Free Microsoft C runtime, headers and import libraries.
 long_description	Free Microsoft C runtime, headers and import libraries to \
 			support cross-compilation of software written for \
@@ -16,15 +16,14 @@ categories		cross devel
 set crossgcc-target i386-mingw32
 
 platforms		darwin
-master_sites		sourceforge:mingw
+master_sites		sourceforge:mingw/MinGW/Base/mingw-rt/mingwrt-${version}
 distname		mingwrt-${version}-mingw32-dev
-dist_subdir		${name}/${version}_1
-checksums		md5     f24d63744af66b54547223bd5476b8f0 \
-			sha1    9f562408b94202ecff558e683e5d7df5440612c4 \
-			rmd160  42ed8faa0bc26918f192ade6ab011ab462c66693
+checksums		md5     2d2f5c8165ff9c29661a5be96336a4f7 \
+			sha1    7c63f3695968054b7236282f35562bb3a2c388d4 \
+			rmd160  30eff5b6b134a3729ebc941546806cadd273f857
 
 extract.dir		${worksrcpath}
-extract.mkdir	yes
+extract.mkdir		yes
 
 # Nothing to configure
 use_configure		no
