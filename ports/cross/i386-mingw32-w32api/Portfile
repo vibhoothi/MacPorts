@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem		1.0
+
+name			i386-mingw32-w32api
+version			3.17
+maintainers		googlemail.com:benedikt.meurer landonf
+description		Mingw32 Win32 headers and import libraries
+long_description	Mingw32 Win32 headers and import libraries to \
+			support cross-compilation of software written for \
+			the Win32 Application Programming Interface \
+			as created by Microsoft.
+homepage		http://www.mingw.org
+categories		cross devel
+
+# Parameters for this port.
+set crossgcc-target i386-mingw32
+
+use_lzma		yes
+platforms		darwin
+master_sites		sourceforge:mingw/MinGW/Base/w32api/w32api-${version}
+distname		w32api-${version}-2-mingw32-dev
+checksums		md5     c3a86ffa6b8c21de868df54e4e38f05e \
+			sha1    1eb60b0cd546bf3efdc3fb89a4118df11da2314a \
+			rmd160  ebc6108d4b7ffce695c36c98b32540a1f6cb2945
+
+extract.dir		${worksrcpath}
+extract.mkdir		yes
+
+# Nothing to configure
+use_configure		no
+
+# Nothing to build
+build {}
+
+destroot.violate_mtree	yes
+destroot {
+	file mkdir ${destpath}${prefix}/${crossgcc-target}
+	file copy -force ${worksrcpath}/include ${destpath}${prefix}/${crossgcc-target}
+	file copy -force ${worksrcpath}/lib ${destpath}${prefix}/${crossgcc-target}
+}
