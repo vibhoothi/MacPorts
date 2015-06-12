@@ -96,7 +96,8 @@ patchfiles          gcc-gfdl-build.diff \
                     config-ml.diff \
                     gcc-system-root.diff \
                     libgomp-kfreebsd-testsuite.diff \
-                    armhf-triplet.diff
+                    armhf-triplet.diff \
+                    gcc-gentype-scope-error.diff
 patch.pre_args      -p2
 
 # All cross ports violate the mtree layout
@@ -134,6 +135,7 @@ configure.args      --infodir='${prefix}/share/info' \
                     --mandir='${prefix}/share/man' \
                     --program-prefix=${crossgcc-target}- \
                     --target=${crossgcc-target} \
+                    --with-internal-glib \
                     --with-gmp='${prefix}' \
                     --with-local-prefix='${prefix}/${crossgcc-target}/sysroot' \
                     --with-mpc='${prefix}' \
