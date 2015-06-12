@@ -7,29 +7,14 @@ These is my development repository for my local MacPorts. Feel free to use my lo
 
 To use my local MacPorts, you will have to set it up as a local portfile repository as follows:
 
-1. Clone the [repository](https://github.com/bmeurer/MacPorts) - `git clone git@github.com:bmeurer/MacPorts.git`
-2. `cd MacPorts/ports`
-3. `(echo "file:/$PWD [nosync]" && cat /opt/local/etc/macports/sources.conf) > sources.conf && sudo mv sources.conf /opt/local/etc/macports/sources.conf`
-4. `portindex`
+´´´bash
 
-Now you can install new ports or upgrade existing ports from my local MacPorts repository. Remember to rerun `portindex` every time you pull from my repository.
+$ sudo port selfupdate
+$ sudo port upgrade outdated
 
-See the official [MacPorts Guide](http://guide.macports.org/) for general instruction about how to setup MacPorts, especially the section about [Local Portfile Repositories](http://guide.macports.org/#development.local-repositories).
-
-
-## Bug Reports
-
-If you come across any problems, please [create a ticket](http://github.com/bmeurer/MacPorts/issues) and I will try to get it fixed as soon as possible.
+$ sudo rm -R /usr/local/macports && git clone https://github.com/foxnet-git/MacPorts.git /usr/local/macports
+$ sudo /bin/sh -c 'echo "file:///usr/local/macports/ports [nosync]" >> /opt/local/etc/macports/sources.conf'
+$ portindex /usr/local/macports/ports
 
 
-## Contributing
-
-Once you've made your commits:
-
-1. [Fork](http://help.github.com/fork-a-repo/ "Fork a repo") MacPorts.
-2. Create a topic branch - `git checkout -b my_branch`.
-3. Push to your topic branch - `git push origin my_branch`.
-4. Create a [Pull Request](http://help.github.com/pull-requests/ "Send pull requests") from your topic branch.
-5. That's it!
-
-
+´´´
