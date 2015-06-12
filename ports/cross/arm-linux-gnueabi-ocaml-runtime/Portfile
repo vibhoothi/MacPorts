@@ -4,9 +4,9 @@
 # Parameters for this port
 set crossgcc-target arm-linux-gnueabi
 set debian-arch     armel
-set findlib-version 1.2.7+debian-1+b1
-set ocaml-version   3.12.1-2
-set ounit-version   1.1.0-3+b2
+set findlib-version 1.2.5+debian-1+b1
+set ocaml-version   3.12.1-4
+set ounit-version   1.1.1-1
 
 PortSystem          1.0
 name                ${crossgcc-target}-ocaml-runtime
@@ -31,25 +31,25 @@ distfiles           libfindlib-ocaml-dev_${findlib-version}_${debian-arch}.deb:f
                     libounit-ocaml-dev_${ounit-version}_${debian-arch}.deb:ounit
 worksrcdir          ${name}-${version}
 checksums           libfindlib-ocaml-dev_${findlib-version}_${debian-arch}.deb \
-                        md5 ce11f80102b5df1cae116127277ac241 \
-                        sha1 6c8ab75e5678f5ff724f94ea29713a1bf49637fd \
-                        rmd160 47fea39745e6b540d591f7acb5ccfa4a7a82101c \
+                        md5 cef8870739e127c52c9fdc1c449b3f19 \
+                        sha1 8d2021a22fa0bb43cabba4b05bd25eee1198129a \
+                        rmd160 b9cfd69a7c01514e6d120abd1ca70f4e840699cc \
                     libfindlib-ocaml_${findlib-version}_${debian-arch}.deb \
-                        md5 f3b9574b58440470c88654de473b0033 \
-                        sha1 dc6eda7864b317a384c97fcc9145c1c0a3fed352 \
-                        rmd160 714dddf8a1f5ba998c1225b08551f67a1c81ed6e \
+                        md5 7d538874923656d300e65419dda389b9 \
+                        sha1 036e49cedac53a409b26ed5d136b1a9c3b9047c9 \
+                        rmd160 0a9195546b784b5bd54d47f7969e11b03fd8b2e7 \
                     ocaml-base-nox_${ocaml-version}_${debian-arch}.deb \
-                        md5 d0b286f506cf2df08dce2bd3d425de1e \
-                        sha1 30ec10b1d54bbefbbc56b979ce567f18c3880389 \
-                        rmd160 9bcabfc1e33412764ab2cd8f3c274160ed0aa5b9 \
+                        md5 c908f1f87eeccf8a12211d52da2a8cd5 \
+                        sha1 e2042a9f92c361dc681ba27f6aa40895d273a159 \
+                        rmd160 09b0e77d45a4f25c8386bfd682777b8d563761d0 \
                     ocaml-nox_${ocaml-version}_${debian-arch}.deb \
-                        md5 5b482feadac119ec826674d1cef58395 \
-                        sha1 b43eae0c6c43b6e19835c0d730aeb87f31716dbc \
-                        rmd160 6875455bfc7913e15b33901bd940bdd5748571da \
+                        md5 2c3731af9ec5fa9f1f924c08e12da330 \
+                        sha1 4fde951e2625dd39131a506e660a25b8815beafa \
+                        rmd160 1c137ca64bfdf1371193c461ffc7eefa9c282de1 \
                     libounit-ocaml-dev_${ounit-version}_${debian-arch}.deb \
-                        md5    2e0d2ff4cf966d761a34ecd94d1b4872 \
-                        sha1   deb0794d25b68819a23ba904f7c3424df99fd931 \
-                        rmd160 95626021d627551e05d9d73fe94281cf90ae1e6c
+                        md5    44aa124e230c502f0736d39d7a6f48c7 \
+                        sha1   d2e69090a75a31cf5239b67848329b58579fd033 \
+                        rmd160 4292b380a78ddee2fc3aed465da21895e9861ada
 
 depends_extract     bin:dpkg:dpkg
 depends_run         port:${crossgcc-target}-runtime
