@@ -7,7 +7,7 @@ These is my development repository for my local MacPorts. Feel free to use my lo
 
 To use my local MacPorts, you will have to set it up as a local portfile repository as follows:
 
-´´´bash
+```bash
 
 $ sudo port selfupdate
 $ sudo port upgrade outdated
@@ -17,4 +17,4 @@ $ sudo /bin/sh -c 'echo "file:///usr/local/macports/ports [nosync]" >> /opt/loca
 $ portindex /usr/local/macports/ports
 
 
-´´´
+```
