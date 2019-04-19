@@ -4,12 +4,12 @@
 # Parameters for this port
 set crossgcc-target arm-linux-gnueabi
 set debian-arch armel
-set binutils-version 2.22-8
-set eglibc-version 2.11.3-4
-set gdbm-version 1.8.3-9
-set linux-version 2.6.32-48squeeze6
-set ncurses-version 5.9-10
-set zlib-version 1.2.3.4.dfsg-3
+set binutils-version 2.31.1-16
+set eglibc-version 2.28-8
+set gdbm-version 1.8.3-14
+set linux-version 3.16.56-1+deb8u1
+set ncurses-version 5.9+20140913-1+deb8u3
+set zlib-version 1.2.8.dfsg-5
 
 PortSystem          1.0
 name                ${crossgcc-target}-runtime
@@ -24,15 +24,15 @@ homepage            http://www.debian.org/
 platforms           darwin
 supported_archs     noarch
 master_sites        debian:b/binutils/:binutils \
-                    debian:e/eglibc/:eglibc \
+                    debian:g/glibc/:glibc \
                     debian:g/gdbm/:gdbm \
-                    debian:l/linux-2.6/:linux \
+                    debian:l/linux/:linux \
                     debian:n/ncurses/:ncurses \
                     debian:z/zlib/:zlib
 distfiles           binutils-dev_${binutils-version}_${debian-arch}.deb:binutils \
-                    libc6-dev_${eglibc-version}_${debian-arch}.deb:eglibc \
-                    libc6-pic_${eglibc-version}_${debian-arch}.deb:eglibc \
-                    libc6_${eglibc-version}_${debian-arch}.deb:eglibc \
+                    libc6-dev_${eglibc-version}_${debian-arch}.deb:glibc \
+                    libc6-pic_${eglibc-version}_${debian-arch}.deb:glibc \
+                    libc6_${eglibc-version}_${debian-arch}.deb:glibc \
                     libgdbm-dev_${gdbm-version}_${debian-arch}.deb:gdbm \
                     libgdbm3_${gdbm-version}_${debian-arch}.deb:gdbm \
                     linux-libc-dev_${linux-version}_${debian-arch}.deb:linux \
@@ -43,53 +43,53 @@ distfiles           binutils-dev_${binutils-version}_${debian-arch}.deb:binutils
                     zlib1g_${zlib-version}_${debian-arch}.deb:zlib
 worksrcdir          ${name}-${version}
 checksums           binutils-dev_${binutils-version}_${debian-arch}.deb \
-                        md5    b252a79a0bb48d4d5aac6a005bd3f6e8 \
-                        sha1   c59ed0f38ebfad31c29a019a5ac723230816f3c7 \
-                        rmd160 023288e93deb8ff0995ed7910fc486442ee62929 \
+                        md5     bf0f42ed5fcf15903e03128c615be786 \
+                        sha1    6c7d967381d98ebcb745ed02802a081d3026aed7 \
+                        rmd160  a7246cf478549ba5e4a0d0582bc4d120303daf5f \
                     libc6-dev_${eglibc-version}_${debian-arch}.deb \
-                        md5    d29f27893e244d31a08da195b1a832f3 \
-                        sha1   871b4ee227ae5520442cbd87283c0d18c43f11ef \
-                        rmd160 17fd8ce8a9b3e9c606fd83d81eac11d32d06d1db \
+                        md5     3725909ee577f97e4a62085dbfcb9e0f \
+                        sha1    7fe2d779333bc8f1e50f8a59b330960d535ee56c \
+                        rmd160  8415397f08f594c364588263c4fcd6bcf09e93f7 \
                     libc6-pic_${eglibc-version}_${debian-arch}.deb \
-                        md5    fa2d261439fdcd49d0fe626295bcb2f9 \
-                        sha1   bdaa513659db752aa524cf291327871ff1bc3aac \
-                        rmd160 a422dba752e29b17349dfb7ec575c5daa10584f0 \
+                        md5     073c2c29681da1d8ee65b501510add44 \
+                        sha1    96005b86fcd2db2bc40b0f093029c1822010e640 \
+                        rmd160  8b7e5983771fbbb9c82271d9d1dac8522ab066f2 \
                     libc6_${eglibc-version}_${debian-arch}.deb \
-                        md5    d598cfb9e156ff3dd4998a898ea70777 \
-                        sha1   0e1b79eda1798d3ca8949279716874f9983eeb9e \
-                        rmd160 1a6c11aa7eda6ff3752e130227aff30ff5d70cd0 \
+                        md5     ef6383bb5af0b6660fc1ea31d52bbdf7 \
+                        sha1    77acaca115eb510cb76e3e1b6ca252e511458fc8 \
+                        rmd160  7b4009afe1031580a30e3a0765fd571a8daf38e3 \
                     libgdbm-dev_${gdbm-version}_${debian-arch}.deb \
-                        md5 79585c76c8446d5062ae13e688959b1f \
-                        sha1 edd9b223ca5c6ceb0ff56092997cf8f25f747b1a \
-                        rmd160 272f0497765872653dd4405125c02f4baf1db80d \
+                        md5     4f98ad6a1eba5772c8798a3b04e55b69 \
+                        sha1    86c4f128edf6c0dd4c30f79c928364ad23e8627c \
+                        rmd160  8ddb0ae2caee8ddf413d626ccff4a9a34629d5ab \
                     libgdbm3_${gdbm-version}_${debian-arch}.deb \
-                        md5 9481406b698902d53e6c9d6c92d60349 \
-                        sha1 5ce5d7ecb4d54804c176fc9c931ec25fd707cb70 \
-                        rmd160 3d62e6e9d8a9a8dc9a079464965f13da7a5bec47 \
+                        md5     d32aaa47df2527148092a2f1c65395ac \
+                        sha1    f875704d0664ecff1c027a4b4162a640c428ec3a \
+                        rmd160  b011c88b94115d02ff5a6bda77495cd9bc0f5dfc \
                     linux-libc-dev_${linux-version}_${debian-arch}.deb \
-                        md5 bc5f3fad8defdf2c27d7de4fbe111ea8 \
-                        sha1 5e58bde624ccc77c8dee1389f726fcb74c0fc3f3 \
-                        rmd160 965335cf31b4eb89b4bfabfcc59e703828b0e568 \
+                        md5     0e5f4ff3dc1e7c92098536482fbbea20 \
+                        sha1    89084ea3d35fede8397f65a45db5c1b65bf7ba06 \
+                        rmd160  b18320f3c8b4ef62306249e89296a97b30a83037 \
                     libncurses5-dev_${ncurses-version}_${debian-arch}.deb \
-                        md5    3e05093d59cd9631f3d846fa36826098 \
-                        sha1   6c3dbb8deb3ecf022dd7ca38dc3ca5223a2d528b \
-                        rmd160 d79264be1c4b5f6bb961987572b350bddce18e7a \
+                        md5     0245c626a83dfc9aa7724110df15181c \
+                        sha1    9084db1187e1f96d4a162b5fa753f8039abd979d \
+                        rmd160  9fb8a40edd789d1fe5b7cf20ec7f2a9d00b9c987 \
                     libtinfo-dev_${ncurses-version}_${debian-arch}.deb \
-                        md5    3baa178f35266e35374c3c89f66357d2 \
-                        sha1   12ab50402adff61649796ae28788fd600299e88d \
-                        rmd160 01c1b33f4e07548464713a0f163c1c636e46efd0 \
+                        md5     cf203ba35002a7158c47f89bffaed4ab \
+                        sha1    fa92a6bfe81b0b71e99990fe2045f0c9230fde57 \
+                        rmd160  ddb57e85e8d36cd178b04a4f08078ca767828cfc \
                     libtinfo5_${ncurses-version}_${debian-arch}.deb \
-                        md5    2d5cf63de6fc0adae30d1277f299f0cd \
-                        sha1   4392ce374f6208e5f7b3f26e90d29facdfe83e13 \
-                        rmd160 7b667b3f5482c6590d92c708dc5587b51f1ef19b \
+                        md5     94dd92cb63cad3833d959a48e33ac61f \
+                        sha1    30ae588b7d221e25f03b5d437a706957243fd40c \
+                        rmd160  e36e408286b36ca0f949ca09db9d9a1f6d007b17 \
                     zlib1g-dev_${zlib-version}_${debian-arch}.deb \
-                        md5 88f411fcaea45350f1347af29aaee497 \
-                        sha1 acb3725ea56df9cf11741255829deece279ed60e \
-                        rmd160 65c261f68a44b27b6bf2c9326f6e41f8ee795bc3 \
+                        md5     f0c07839533eeffe36c66fa5d4772b68 \
+                        sha1    217e84e51731bef4c9396b3bcb750d46ae6be2d1 \
+                        rmd160  c8044befe4d1c4d6651118a21d72a2cbcc998009 \
                     zlib1g_${zlib-version}_${debian-arch}.deb \
-                        md5 bef2867f57394ba5fe902c56089330e9 \
-                        sha1 b1f40b57f2a15368e84ce7107f2a782e886e5447 \
-                        rmd160 e0a05a9a3d4e07c32a12e7de6ccb9c9026aee19e
+                        md5     d9b1250f3c6037ad93a88b3c79d960ed \
+                        sha1    1835c85426ca6d904942919f96677d0f84dbd9fa \
+                        rmd160  c335b86faac52fcdee87ed25c9d2147a52096ea1 \
 
 depends_extract     bin:dpkg:dpkg
 
